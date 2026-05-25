@@ -1,0 +1,111 @@
+
+<style>
+  .review { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .section { margin-bottom: 2rem; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+  .finding { display: flex; gap: 12px; padding: 12px 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 8px; background: var(--color-background-primary); }
+  .finding.critical { border-left: 3px solid #E24B4A; }
+  .finding.warning  { border-left: 3px solid #EF9F27; }
+  .finding.fixed    { border-left: 3px solid #639922; }
+  .badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 100px; white-space: nowrap; align-self: flex-start; margin-top: 1px; }
+  .badge.critical { background: #FCEBEB; color: #A32D2D; }
+  .badge.warning  { background: #FAEEDA; color: #854F0B; }
+  .badge.fixed    { background: #EAF3DE; color: #3B6D11; }
+  .finding-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.55; flex: 1; }
+  .finding-text code { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-secondary); padding: 1px 5px; border-radius: 4px; }
+  .scorerow { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+  .score-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 12px; text-align: center; }
+  .score-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .score-val { font-size: 22px; font-weight: 500; }
+  .score-val.red    { color: #E24B4A; }
+  .score-val.amber  { color: #BA7517; }
+  .score-val.green  { color: #3B6D11; }
+  .delta { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .delta.up { color: #3B6D11; }
+  .delta.down { color: #E24B4A; }
+</style>
+<div class="review" role="region" aria-label="SuperRecall v2 code review">
+
+  <div class="scorerow">
+    <div class="score-card"><div class="score-label">Architecture</div><div class="score-val green">B+</div><div class="delta">→ unchanged</div></div>
+    <div class="score-card"><div class="score-label">Correctness</div><div class="score-val amber">B−</div><div class="delta up">↑ from D</div></div>
+    <div class="score-card"><div class="score-label">Security</div><div class="score-val amber">C+</div><div class="delta up">↑ from D+</div></div>
+    <div class="score-card"><div class="score-label">Test coverage</div><div class="score-val amber">C</div><div class="delta">→ unchanged</div></div>
+    <div class="score-card"><div class="score-label">Overall</div><div class="score-val amber">B−</div><div class="delta up">↑ from C</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✅ All four critical issues resolved</div>
+
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong>Provider order crash.</strong> <code>SyncService</code> is now declared second in the list, immediately after <code>StorageService</code>, before anything that depends on it. The crash is gone.</div>
+    </div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong>Firebase not configured for Android / iOS.</strong> Both platforms now have <code>FirebaseOptions</code> entries with proper <code>appId</code>, <code>iosBundleId</code>, etc. The <code>UnsupportedError</code> throws are removed.</div>
+    </div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong>Sign-out data loss.</strong> <code>clearAll()</code> is removed from <code>signOut()</code>. The comment explains the intent clearly. Good.</div>
+    </div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong><code>LearningSessionController</code> reactivity.</strong> Changed to <code>ChangeNotifierProxyProvider2</code> and now extends <code>ChangeNotifier</code>. Daily session widgets will rebuild correctly.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✅ All warnings also addressed</div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong><code>monthsToGoal</code> serialisation.</strong> Stored in <code>AppSettingsSchema</code> in Isar and round-tripped through <code>getProgress()</code> / <code>saveProgress()</code>. Survives restarts now.</div>
+    </div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong>Sync merge strategy.</strong> <code>_mergeData()</code> now unions completed lessons, quiz attempts, and SRS intervals rather than blindly overwriting local state with remote.</div>
+    </div>
+    <div class="finding fixed">
+      <span class="badge fixed">Fixed</span>
+      <div class="finding-text"><strong>SRS ease-factor ceiling.</strong> Raised from <code>2.5</code> to <code>5.0</code>, and a 10-year interval cap added (<code>clamp(0, 3650)</code>). High performers now see accelerating intervals.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔴 One critical issue survived — in new clothing</div>
+
+    <div class="finding critical">
+      <span class="badge critical">Security</span>
+      <div class="finding-text"><strong>Firebase key still ships in every binary.</strong> The move to <code>String.fromEnvironment('FIREBASE_WEB_API_KEY', defaultValue: '…')</code> is the right pattern, but the real key is still the <code>defaultValue</code>. Dart's <code>fromEnvironment</code> is resolved <em>at compile time</em> — if the CI/build environment doesn't define those variables, the fallback is baked into the compiled binary exactly as before. Until the CI pipeline actively injects the env vars and the <code>defaultValue</code> fields are left empty (or removed), this provides zero protection in practice.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🟡 New regression introduced</div>
+
+    <div class="finding warning">
+      <span class="badge warning">Regression</span>
+      <div class="finding-text"><strong><code>monthsToGoal</code> lost for brand-new users.</strong> <code>StorageService.getProgress()</code> returns <code>null</code> early when <code>lessons.isEmpty && quizzes.isEmpty</code> — i.e. a fresh install. But <code>monthsToGoal</code> is now bundled into the same return value, so a user who sets their goal date before completing any lessons will lose it on the next restart. The fix is to not short-circuit when lessons/quizzes are empty if settings exist, or load <code>monthsToGoal</code> via a separate settings read in <code>ProgressController.init()</code>.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🟡 Remaining warnings</div>
+
+    <div class="finding warning">
+      <span class="badge warning">SRS</span>
+      <div class="finding-text"><strong>Ease-factor cap of 5.0 is too aggressive.</strong> With no upper bound below 5.0, after ~8 consecutive perfect reviews an interval can balloon to years before hitting the 3,650-day cap. Most SRS research (and Anki) caps ease at 2.5–3.0. Consider capping at <code>3.0</code> — it still rewards good recall without producing decade-long gaps after a single strong run.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">Sync</span>
+      <div class="finding-text"><strong>Merge strategy is asymmetric for <code>monthsToGoal</code>.</strong> Lessons and SRS use "local wins"; <code>monthsToGoal</code> uses "remote wins" (with a comment acknowledging the lack of timestamps). A user who updates their goal on their phone, then opens the web version for the first time, will have their setting silently overwritten. Consistent local-wins or a last-write-wins timestamp would be cleaner.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">Tests</span>
+      <div class="finding-text"><strong>New logic has no new tests.</strong> The <code>_mergeData()</code> function and the <code>monthsToGoal</code> storage path are both logic-heavy and both untested. A merge function with union semantics is exactly the kind of thing that breaks subtly — add at least 3 unit tests covering: local-only data, remote-only data, and a conflict where both have the same lesson id.</div>
+    </div>
+  </div>
+
+</div>

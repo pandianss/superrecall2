@@ -1,0 +1,314 @@
+
+<h2 class="sr-only">SuperRecall UI/UX research report: dark mode colour system, typography, card patterns, micro-interactions, navigation, and session flow recommendations.</h2>
+<style>
+body{margin:0}
+.wrap{padding:1.5rem 0;font-family:var(--font-sans)}
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:100px;margin-right:4px}
+.pill.ok{background:#EAF3DE;color:#3B6D11}
+.pill.warn{background:#FAEEDA;color:#854F0B}
+.pill.info{background:#E6F1FB;color:#185FA5}
+.pill.purple{background:#EEEDFE;color:#3C3489}
+.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);margin:2rem 0 .75rem}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:.75rem}
+.card.accent-purple{border-left:3px solid #7F77DD}
+.card.accent-teal{border-left:3px solid #1D9E75}
+.card.accent-amber{border-left:3px solid #EF9F27}
+.card.accent-blue{border-left:3px solid #378ADD}
+.card.accent-coral{border-left:3px solid #D85A30}
+.card h3{font-size:14px;font-weight:500;margin:0 0 6px;color:var(--color-text-primary)}
+.card p{font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0}
+.card p+p{margin-top:6px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.75rem;margin-bottom:.75rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin-bottom:.75rem}
+.swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.swatch{height:36px;border-radius:6px;flex:1;min-width:32px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.label-pair{display:flex;justify-content:space-between;font-size:12px;margin:4px 0}
+.label-pair span:first-child{color:var(--color-text-secondary)}
+.label-pair span:last-child{color:var(--color-text-primary);font-weight:500}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0}
+.flow-step{background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--color-text-primary)}
+.flow-arrow{color:var(--color-text-secondary);font-size:12px}
+.mock-card{background:var(--color-background-secondary);border-radius:10px;padding:1.25rem;margin:8px 0;border:.5px solid var(--color-border-tertiary)}
+.mock-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin:0 0 6px;text-transform:uppercase;letter-spacing:.05em}
+.mock-body{font-size:20px;font-weight:500;color:var(--color-text-primary);line-height:1.4;margin:0 0 12px}
+.mock-sub{font-size:12px;color:var(--color-text-secondary);margin:0}
+.btn-row{display:flex;gap:8px;margin-top:10px}
+.btn-sm{border:.5px solid var(--color-border-secondary);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;background:var(--color-background-primary);color:var(--color-text-primary);cursor:default}
+.btn-sm.primary{background:#534AB7;border-color:#534AB7;color:#fff}
+.btn-sm.ok{background:#3B6D11;border-color:#3B6D11;color:#fff}
+.progress-bar-wrap{background:var(--color-background-secondary);border-radius:100px;height:6px;margin:8px 0}
+.progress-bar{height:6px;border-radius:100px;background:#1D9E75}
+.xp-chip{display:inline-flex;align-items:center;gap:4px;background:#FAEEDA;color:#854F0B;border-radius:100px;font-size:11px;font-weight:500;padding:2px 8px;margin-right:4px}
+.streak-chip{display:inline-flex;align-items:center;gap:4px;background:#FCEBEB;color:#A32D2D;border-radius:100px;font-size:11px;font-weight:500;padding:2px 8px}
+.type-row{display:flex;align-items:baseline;gap:12px;padding:6px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.type-row:last-child{border-bottom:none}
+.type-name{font-size:12px;color:var(--color-text-secondary);width:90px;flex-shrink:0}
+.type-sample{color:var(--color-text-primary)}
+.comp-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.comp-row:last-child{border-bottom:none}
+.comp-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.comp-text h4{font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary)}
+.comp-text p{font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1.5}
+</style>
+
+<div class="wrap">
+
+  <div class="section-label">Context</div>
+  <div class="card">
+    <p>SuperRecall targets working professionals studying for certifications in <strong style="font-weight:500">5–10 minute commute bursts</strong>. Sessions happen in low-light environments (trains, evening desks). Dark mode is not optional — it is the primary use environment. The following recommendations are grounded in that reality.</p>
+  </div>
+
+  <div class="section-label">1 · Dark mode colour system</div>
+  <div class="grid2">
+    <div class="card accent-purple">
+      <h3>Background layer stack</h3>
+      <div class="swatch-row">
+        <div class="swatch" style="background:#0D0D0F;color:#888"><span>#0D0D0F</span></div>
+        <div class="swatch" style="background:#16161A;color:#888"><span>#16161A</span></div>
+        <div class="swatch" style="background:#1E1E24;color:#888"><span>#1E1E24</span></div>
+        <div class="swatch" style="background:#26262D;color:#aaa"><span>#26262D</span></div>
+        <div class="swatch" style="background:#2E2E38;color:#aaa"><span>#2E2E38</span></div>
+      </div>
+      <p>Avoid pure #000000 — it causes OLED halo on high-contrast text. Use near-blacks with a slight warm or cool tint to establish depth without harshness. Page → sheet → card → elevated card: each surface is ~6–8 pts lighter.</p>
+    </div>
+    <div class="card accent-teal">
+      <h3>Accent palette (dark-optimised)</h3>
+      <div class="swatch-row">
+        <div class="swatch" style="background:#7F77DD;color:#fff"><span>Primary</span></div>
+        <div class="swatch" style="background:#1D9E75;color:#fff"><span>Success</span></div>
+        <div class="swatch" style="background:#EF9F27;color:#1a1a1a"><span>XP</span></div>
+        <div class="swatch" style="background:#E24B4A;color:#fff"><span>Danger</span></div>
+      </div>
+      <p>On dark surfaces, saturated brand colours pop without boosting brightness. Desaturate each colour by ~15% from its light-mode value. Never put two saturated accents side by side — use one anchor, rest in grey.</p>
+    </div>
+  </div>
+  <div class="grid3">
+    <div class="card">
+      <h3>Text contrast</h3>
+      <div class="label-pair"><span>Heading</span><span>#F0EFF8 — 4.8:1</span></div>
+      <div class="label-pair"><span>Body</span><span>#C8C6D8 — 3.9:1</span></div>
+      <div class="label-pair"><span>Muted</span><span>#8A8899 — 2.5:1</span></div>
+      <p style="margin-top:8px">Avoid pure white #FFFFFF — causes halation. Off-white with a slight purple hue matches the dark background tint and reduces eye strain in dark spaces.</p>
+    </div>
+    <div class="card">
+      <h3>Semantic token names</h3>
+      <div class="label-pair"><span>surface-base</span><span>#0D0D0F</span></div>
+      <div class="label-pair"><span>surface-card</span><span>#1E1E24</span></div>
+      <div class="label-pair"><span>surface-elevated</span><span>#26262D</span></div>
+      <div class="label-pair"><span>border-subtle</span><span>rgba(255,255,255,.07)</span></div>
+      <p style="margin-top:8px">Token naming matters — name by role, not value. Flutter ThemeExtension can hold these as constants next to their light equivalents.</p>
+    </div>
+    <div class="card">
+      <h3>Elevation via brightness</h3>
+      <p>In dark mode, depth is conveyed by lightening surfaces, not adding box-shadows (shadows disappear on dark bgs). Each elevation level is +6 lightness points. Cards = 3dp, modals = 8dp, tooltips = 12dp. Avoid blur/glassmorphism — it is expensive in Flutter and flickers on mid-range Android.</p>
+    </div>
+  </div>
+
+  <div class="section-label">2 · Typography for cognitive load</div>
+  <div class="card accent-blue">
+    <div class="type-row">
+      <span class="type-name">Display / topic</span>
+      <span class="type-sample" style="font-size:22px;font-weight:500">What is DNS?</span>
+    </div>
+    <div class="type-row">
+      <span class="type-name">Card prompt</span>
+      <span class="type-sample" style="font-size:18px;font-weight:500">Define a TCP handshake</span>
+    </div>
+    <div class="type-row">
+      <span class="type-name">Card answer</span>
+      <span class="type-sample" style="font-size:16px;line-height:1.7">SYN → SYN-ACK → ACK. Three-way process to establish connection before data transfer begins.</span>
+    </div>
+    <div class="type-row">
+      <span class="type-name">Progress / meta</span>
+      <span class="type-sample" style="font-size:13px;color:var(--color-text-secondary)">Card 4 of 12 · due in 3 days</span>
+    </div>
+    <div class="type-row">
+      <span class="type-name">Label / badge</span>
+      <span class="type-sample" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em">Networking</span>
+    </div>
+    <p style="margin-top:12px">Use a single humanist sans (Inter or the device system font). Two weights only: 400 for body, 500 for headings. Line height 1.7 on answer text — the user is reading while processing, not skimming. Minimum body size 16px; answer text should never drop below this even in compact layouts.</p>
+  </div>
+
+  <div class="section-label">3 · Flashcard / session card UI</div>
+  <div class="grid2">
+    <div>
+      <div class="mock-card">
+        <div class="mock-title">Networking · Card 4/12</div>
+        <div class="mock-body">What does TTL stand for in networking, and what does it control?</div>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:33%"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="mock-sub">Tap to reveal</span>
+          <span style="font-size:12px;color:var(--color-text-secondary)">← swipe to skip</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin:6px 0 0">Prompt state: one piece of information per card. No sub-bullet lists on the front. Progress bar replaces numeric "4 of 12" — less cognitive overhead. Swipe-left gesture for skip is standard and muscle-memory safe.</p>
+    </div>
+    <div>
+      <div class="mock-card">
+        <div class="mock-title" style="color:#1D9E75">Answer revealed</div>
+        <div class="mock-body" style="font-size:15px">Time To Live — a counter in IP packets limiting the number of hops before the packet is discarded. Prevents infinite loops in routing.</div>
+        <div class="btn-row">
+          <div class="btn-sm" style="flex:1;text-align:center;border-color:#E24B4A;color:#E24B4A">Again</div>
+          <div class="btn-sm" style="flex:1;text-align:center;border-color:#EF9F27;color:#854F0B">Hard</div>
+          <div class="btn-sm ok" style="flex:1;text-align:center">Good</div>
+          <div class="btn-sm primary" style="flex:1;text-align:center">Easy</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin:6px 0 0">Rating state: 4-button strip at the bottom, full-width. Labels are text + colour coded — red → amber → green → purple. This matches SM-2 quality scores 1–4. Avoid using emoji as the sole indicator.</p>
+    </div>
+  </div>
+  <div class="card accent-coral">
+    <h3>Card interaction principles</h3>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#FAECE7"><i class="ti ti-cards" aria-hidden="true" style="font-size:16px;color:#D85A30"></i></div>
+      <div class="comp-text"><h4>Tap-to-flip, not scroll-to-reveal</h4><p>The entire card surface is the tap target. Do not use a "Show answer" button buried at the bottom — one hand, one thumb, commute context.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#EAF3DE"><i class="ti ti-swipe" aria-hidden="true" style="font-size:16px;color:#3B6D11"></i></div>
+      <div class="comp-text"><h4>Swipe semantics</h4><p>Left = skip/again, Right = easy, Up = AI explanation. These map to existing muscle memory from dating and content apps. Show a translucent hint label on first-use only.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#E6F1FB"><i class="ti ti-clock" aria-hidden="true" style="font-size:16px;color:#185FA5"></i></div>
+      <div class="comp-text"><h4>Session time estimate upfront</h4><p>"~6 min · 12 cards" shown before starting. Professionals need to know if they can finish a session before their stop. If a session will be interrupted, auto-save and resume is mandatory.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#FAEEDA"><i class="ti ti-brain" aria-hidden="true" style="font-size:16px;color:#854F0B"></i></div>
+      <div class="comp-text"><h4>AI explanation as a layer, not a screen</h4><p>The Gemini explanation should slide up as a bottom sheet over the card, not navigate to a new screen. The card remains visible at the top so the user keeps context. Dismiss with swipe-down.</p></div>
+    </div>
+  </div>
+
+  <div class="section-label">4 · Micro-interactions & feedback loops</div>
+  <div class="grid2">
+    <div class="card accent-amber">
+      <h3>Streak & XP surface</h3>
+      <div style="margin:8px 0">
+        <span class="xp-chip"><i class="ti ti-bolt" aria-hidden="true" style="font-size:11px"></i>+20 XP</span>
+        <span class="streak-chip"><i class="ti ti-flame" aria-hidden="true" style="font-size:11px"></i>7-day streak</span>
+      </div>
+      <p>Show XP and streak as transient chips on card completion — fade in at the top of the card, auto-dismiss after 2s. Never block the next card with a full-screen celebration. Research shows "inchstone" feedback (small frequent wins) increases session completion more than milestone-only celebrations.</p>
+    </div>
+    <div class="card accent-teal">
+      <h3>Progress ring on home</h3>
+      <div style="display:flex;align-items:center;gap:14px;margin:8px 0">
+        <svg width="52" height="52" viewBox="0 0 52 52" role="img" aria-label="Progress ring showing 65% daily goal complete">
+          <circle cx="26" cy="26" r="22" fill="none" stroke="var(--color-border-tertiary)" stroke-width="4"/>
+          <circle cx="26" cy="26" r="22" fill="none" stroke="#1D9E75" stroke-width="4" stroke-dasharray="138.2" stroke-dashoffset="48.4" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+          <text x="26" y="30" text-anchor="middle" font-size="12" font-weight="500" fill="var(--color-text-primary)">65%</text>
+        </svg>
+        <div>
+          <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0">8 of 12 done today</p>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:2px 0 0">~4 min to finish</p>
+        </div>
+      </div>
+      <p>Single-ring progress on the home screen replaces the current card-count list. Animates on enter (0→65%). Much more readable at a glance during commute than a table of numbers.</p>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Interaction feedback map</h3>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#EAF3DE"><i class="ti ti-check" aria-hidden="true" style="font-size:16px;color:#3B6D11"></i></div>
+      <div class="comp-text"><h4>Card marked "Good" or "Easy"</h4><p>Subtle green border flash (120ms) + haptic medium impact. No sound — public transport. XP chip fades in at top. Card slides left off screen.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#FCEBEB"><i class="ti ti-refresh" aria-hidden="true" style="font-size:16px;color:#A32D2D"></i></div>
+      <div class="comp-text"><h4>Card marked "Again"</h4><p>Subtle red border flash (80ms) + haptic light. No animation beyond colour — shame mechanics in learning apps correlate with session abandonment.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#EEEDFE"><i class="ti ti-trophy" aria-hidden="true" style="font-size:16px;color:#534AB7"></i></div>
+      <div class="comp-text"><h4>Session complete</h4><p>Confetti particle burst (Lottie, under 30 frames) + summary card: cards reviewed, time taken, XP earned. One CTA: "Done" — not "Keep going" (avoid infinite scroll pressure on learning apps).</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#FAEEDA"><i class="ti ti-flame" aria-hidden="true" style="font-size:16px;color:#854F0B"></i></div>
+      <div class="comp-text"><h4>Streak milestone (7, 30, 100 days)</h4><p>Full-screen moment (modal, not navigation) on first open after milestone. Dismiss with tap anywhere. Never show this mid-session — interrupts flow state.</p></div>
+    </div>
+  </div>
+
+  <div class="section-label">5 · Navigation & information architecture</div>
+  <div class="card accent-purple">
+    <h3>Bottom tab structure (4 tabs max)</h3>
+    <div class="flow">
+      <div class="flow-step"><i class="ti ti-player-play" aria-hidden="true"></i> Study</div>
+      <div class="flow-arrow">·</div>
+      <div class="flow-step"><i class="ti ti-map" aria-hidden="true"></i> Curriculum</div>
+      <div class="flow-arrow">·</div>
+      <div class="flow-step"><i class="ti ti-chart-bar" aria-hidden="true"></i> Analytics</div>
+      <div class="flow-arrow">·</div>
+      <div class="flow-step"><i class="ti ti-settings" aria-hidden="true"></i> Settings</div>
+    </div>
+    <p>Study is always tab 1 — the app's primary action. Curriculum (lesson browser) is second. Analytics is third — useful, not urgent. Settings is last. The current "Home → Lesson → Study" three-deep navigation adds friction for commuters. Primary action should be one tap from launch.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Session entry flow</h3>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:4px">
+        <div class="flow-step" style="width:100%;box-sizing:border-box">App launch</div>
+        <div class="flow-arrow" style="padding-left:12px">↓</div>
+        <div class="flow-step" style="width:100%;box-sizing:border-box">Home: ring + "Start session" CTA</div>
+        <div class="flow-arrow" style="padding-left:12px">↓</div>
+        <div class="flow-step" style="width:100%;box-sizing:border-box">~6 min · 12 cards preview</div>
+        <div class="flow-arrow" style="padding-left:12px">↓</div>
+        <div class="flow-step" style="width:100%;box-sizing:border-box;background:var(--color-background-info);color:var(--color-text-info)">First card shown</div>
+      </div>
+      <p style="margin-top:8px">Max 3 taps from cold launch to first card. The current app requires ≥4. Each extra tap causes ~8% session-start drop-off on commuter apps.</p>
+    </div>
+    <div class="card">
+      <h3>Skeleton loading states</h3>
+      <div style="margin:8px 0">
+        <div style="height:14px;background:var(--color-background-secondary);border-radius:4px;margin-bottom:8px;width:60%"></div>
+        <div style="height:22px;background:var(--color-background-secondary);border-radius:4px;margin-bottom:8px"></div>
+        <div style="height:22px;background:var(--color-background-secondary);border-radius:4px;margin-bottom:8px;width:80%"></div>
+        <div style="height:6px;background:var(--color-background-secondary);border-radius:100px;margin-bottom:8px;width:33%"></div>
+      </div>
+      <p>Use skeleton screens instead of spinners everywhere. On a commute, a spinner triggers impatience; a skeleton signals "content is loading, keep reading the shape of what's coming." Animate with a slow shimmer (1.5s) only if OLED-safe.</p>
+    </div>
+  </div>
+
+  <div class="section-label">6 · Commute-specific UX requirements</div>
+  <div class="grid3">
+    <div class="card accent-blue">
+      <h3>Thumb zone optimisation</h3>
+      <p>All primary interactions (flip, rate, advance) must be reachable with one thumb in the bottom 55% of the screen. Keep the top area for passive info only (topic label, progress). Minimum tap target: 48×48 dp.</p>
+    </div>
+    <div class="card accent-teal">
+      <h3>Interruption resilience</h3>
+      <p>Auto-save state on every card rating, not on session end. If the app is killed mid-session, resume from the exact card. Show "Resume session" prominently on next launch. Do not restart the session counter.</p>
+    </div>
+    <div class="card accent-purple">
+      <h3>Offline-first session start</h3>
+      <p>Sessions must start offline — subway tunnels kill connectivity. Pre-fetch the next session's cards on app open over WiFi/LTE. The SRS data is already local in Isar, but AI explanation fetches need a graceful offline fallback message.</p>
+    </div>
+  </div>
+
+  <div class="section-label">7 · What the competition gets wrong (opportunity gaps)</div>
+  <div class="grid2">
+    <div class="card accent-coral">
+      <h3>Anki — powerful, visually dated</h3>
+      <p>Users explicitly call it "not modern-looking" and "confusing to navigate." The card creation friction is high enough that people abandon before seeing the SRS benefit. SuperRecall's curated content removes this barrier — lean into that with UI that signals "just press start."</p>
+    </div>
+    <div class="card accent-amber">
+      <h3>Duolingo — gamification over retention</h3>
+      <p>Streak mechanics are aggressive to the point of anxiety. Users report the fear of losing a streak outweighs learning motivation. SuperRecall should show streaks as celebration, not obligation — and never use loss-aversion language ("Don't lose your streak!").</p>
+    </div>
+  </div>
+
+  <div class="section-label">8 · Flutter implementation notes</div>
+  <div class="card">
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#EEEDFE"><i class="ti ti-palette" aria-hidden="true" style="font-size:16px;color:#534AB7"></i></div>
+      <div class="comp-text"><h4>Use ThemeExtension for the full colour token set</h4><p>Define semantic tokens (surfaceBase, surfaceCard, textPrimary, accentPrimary…) as a ThemeExtension — not scattered ColorScheme overrides. This makes light/dark switching a single Theme.of(context).extension&lt;AppColors&gt;() call per widget.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#EAF3DE"><i class="ti ti-bounce-right" aria-hidden="true" style="font-size:16px;color:#3B6D11"></i></div>
+      <div class="comp-text"><h4>Use Lottie for completion animations, not CustomPainter</h4><p>Confetti and celebration frames in Lottie are far cheaper than CustomPainter particle systems on mid-range Android. Keep Lottie files under 30KB — the lottie_flutter package streams them from assets without blocking.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#E6F1FB"><i class="ti ti-brand-flutter" aria-hidden="true" style="font-size:16px;color:#185FA5"></i></div>
+      <div class="comp-text"><h4>Card flip: AnimatedCard with PageView, not Navigator</h4><p>Use PageView with a custom TweenAnimationBuilder for the card flip animation. Navigator.push for each card creates a deep stack that breaks the swipe-back gesture on iOS and tanks memory on longer sessions.</p></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-badge" style="background:#FAEEDA"><i class="ti ti-accessible" aria-hidden="true" style="font-size:16px;color:#854F0B"></i></div>
+      <div class="comp-text"><h4>Honour system dark mode by default</h4><p>Set the app's initial theme to MediaQuery.platformBrightness — respect the system preference without asking. The settings toggle is for override, not default. Users who want light mode will find it; users who set their phone to dark mode at midnight will not be blinded.</p></div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,997 @@
+{
+  "id": "caiib_2026",
+  "name": "CAIIB 2026",
+  "shortDescription": "Certified Associate of Indian Institute of Bankers",
+  "recommendedDailyMinutes": 45,
+  "weeklyAssessmentLabel": "Weekly Mock Drill",
+  "focusAreas": [
+    "Economic Analysis",
+    "Credit Management",
+    "Risk Management",
+    "Treasury Operations"
+  ],
+  "weeklyRhythm": [
+    "Mon: ABM Theory",
+    "Tue: BFM Case Studies",
+    "Wed: ABFL Analytics",
+    "Thu: BRBL Compliance",
+    "Fri: Mixed Quiz",
+    "Sat: Full Mock",
+    "Sun: Progress Review"
+  ],
+  "subjects": [
+    {
+      "id": "abm",
+      "name": "Advanced Bank Management",
+      "description": "Fundamental and advanced management practices in the banking sector.",
+      "examFormats": ["mcq", "caseStudy"],
+      "isPremium": false,
+      "price": 0,
+      "modules": [
+        {
+          "id": "abm_m1",
+          "name": "Statistics & HR Management",
+          "description": "Introduction to statistical tools and human resource management.",
+          "topics": [
+            {
+              "id": "abm_t1",
+              "name": "Measures of Central Tendency",
+              "summary": "Understanding Mean, Median, and Mode in banking analytics.",
+              "examFormats": ["mcq", "numerical"],
+              "notationSupport": true,
+              "lessons": [
+                {
+                  "id": "abm_l1",
+                  "title": "Introduction to Mean and Median",
+                  "durationMinutes": 10,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "In banking, understanding the average distribution of loans or deposits is crucial." },
+                    { "type": "equation", "content": "\\bar{x} = \\frac{\\sum x_i}{n}" },
+                    { "type": "callout", "content": "Mean is highly sensitive to outliers, while Median provides a better central value for skewed data." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abm_q1",
+                  "title": "Statistics Quick Quiz",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abm_q1_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which measure of central tendency is best for data with extreme outliers?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Arithmetic Mean", "status": "distractor" },
+                        { "label": "B", "value": "Median", "status": "correct" },
+                        { "label": "C", "value": "Mode", "status": "distractor" },
+                        { "label": "D", "value": "Range", "status": "distractor" }
+                      ],
+                      "explanation": "The Median is less affected by outliers compared to the Mean."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bfm",
+      "name": "Bank Financial Management",
+      "description": "In-depth look at international banking, risk management, and balance sheet management.",
+      "examFormats": ["mcq", "caseStudy", "numerical"],
+      "isPremium": true,
+      "price": 9.99,
+      "modules": [
+        {
+          "id": "bfm_m1",
+          "name": "International Banking",
+          "description": "Exchange rates, forex operations, and global trade finance.",
+          "topics": [
+            {
+              "id": "bfm_t1",
+              "name": "Exchange Rate Arithmetic",
+              "summary": "Calculating cross rates and forward rates in forex.",
+              "examFormats": ["mcq", "numerical"],
+              "notationSupport": true,
+              "lessons": [
+                {
+                  "id": "bfm_l1",
+                  "title": "Cross Rate Calculations",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "A cross rate is the exchange rate between two currencies calculated from their rates against a third currency." },
+                    { "type": "equation", "content": "Rate(A/C) = Rate(A/B) \\times Rate(B/C)" },
+                    { "type": "table", "content": "Pair,Rate|USD/INR,83.50|EUR/USD,1.08" }
+                  ]
+                }
+              ],
+              "quizzes": [],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abfm",
+      "name": "Advanced Business & Financial Management",
+      "description": "Advanced concepts in corporate finance, project evaluation, and business strategy.",
+      "examFormats": ["mcq", "numerical"],
+      "isPremium": true,
+      "price": 12.99,
+      "modules": [
+        {
+          "id": "abfm_ma",
+          "name": "Module A: Management Process",
+          "description": "Foundational management concepts, planning, and core managerial functions including Organising, Staffing, Directing, and Controlling.",
+          "topics": [
+            {
+              "id": "abfm_t1",
+              "name": "Basics of Management",
+              "summary": "Introduction to management principles, historical schools of thought, and strategic frameworks like SWOT.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l1_1",
+                  "title": "Management Functions & Process",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Management is the process of planning, organising, and controlling resources to achieve organizational goals efficiently." },
+                    { "type": "callout", "content": "Henry Fayol identified five core functions: Planning, Organising, Commanding, Coordinating, and Controlling (POCCC)." },
+                    { "type": "paragraph", "content": "The management process involves interpersonal, informational, and decisional roles as identified by Mintzberg." }
+                  ]
+                },
+                {
+                  "id": "abfm_l1_2",
+                  "title": "Schools of Management Thought",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Evolution of management can be categorized into Classical and Neoclassical schools." },
+                    { "type": "table", "content": "School,Focus,Key Proponents|Scientific Management,Task efficiency & productivity,F.W. Taylor|Administrative Management,Organizational structure & principles,Henry Fayol|Bureaucracy,Hierarchical authority & rules,Max Weber|Neoclassical,Human relations & motivation,Elton Mayo" }
+                  ]
+                },
+                {
+                  "id": "abfm_l1_3",
+                  "title": "Strategic Management & SWOT",
+                  "durationMinutes": 12,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Strategic management involves formulation and implementation of major goals based on environmental scanning." },
+                    { "type": "callout", "content": "SWOT Analysis: Internal (Strengths, Weaknesses) and External (Opportunities, Threats) factors evaluation." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q1",
+                  "title": "Management Basics Quiz",
+                  "questionCount": 3,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q1_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which function of management involves reporting structure and task assignment?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Planning", "status": "distractor" },
+                        { "label": "B", "value": "Organising", "status": "correct" },
+                        { "label": "C", "value": "Directing", "status": "distractor" },
+                        { "label": "D", "value": "Controlling", "status": "distractor" }
+                      ],
+                      "explanation": "Organising involves grouping tasks and establishing authority relationships."
+                    },
+                    {
+                      "id": "abfm_q1_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "The 'Neoclassical' school of management primarily focuses on:" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Scientific task analysis", "status": "distractor" },
+                        { "label": "B", "value": "Rules and Hierarchy", "status": "distractor" },
+                        { "label": "C", "value": "Human motivation and relationships", "status": "correct" },
+                        { "label": "D", "value": "Administrative principles", "status": "distractor" }
+                      ],
+                      "explanation": "Neoclassical theory emphasizes the human element in organizations."
+                    },
+                    {
+                      "id": "abfm_q1_3",
+                      "promptBlocks": [{ "type": "paragraph", "content": "In SWOT analysis, 'Threats' represent factors that are:" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Internal and Positive", "status": "distractor" },
+                        { "label": "B", "value": "Internal and Negative", "status": "distractor" },
+                        { "label": "C", "value": "External and Positive", "status": "distractor" },
+                        { "label": "D", "value": "External and Negative", "status": "correct" }
+                      ],
+                      "explanation": "Opportunities and Threats are external factors."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t2",
+              "name": "Planning",
+              "summary": "The art of setting objectives, MBO, SMART goals, and environmental analysis using PESTLE.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l2_1",
+                  "title": "Objectives & SMART Goals",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Planning begins with setting objectives. Effective goals should follow the SMART criteria." },
+                    { "type": "callout", "content": "SMART: Specific, Measurable, Achievable, Relevant, Time-bound." },
+                    { "type": "paragraph", "content": "Management by Objectives (MBO) is a process where managers and employees jointly set goals." }
+                  ]
+                },
+                {
+                  "id": "abfm_l2_2",
+                  "title": "Environmental Analysis (PESTLE)",
+                  "durationMinutes": 18,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Environmental analysis involves examining external factors affecting the organization." },
+                    { "type": "table", "content": "Factor,Description|Political,Tax policy; labor law; trade restrictions|Economic,Interest rates; inflation; GDP growth|Social,Demographics; cultural trends|Technological,Automation; R&D activity|Legal,Consumer laws; safety standards|Environmental,Weather; climate change policies" }
+                  ]
+                },
+                {
+                  "id": "abfm_l2_3",
+                  "title": "Contingency Planning & Forecasting",
+                  "durationMinutes": 10,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Contingency plans (Plan B) are alternative courses of action for unforeseen events." },
+                    { "type": "callout", "content": "Forecasting involves predicting future events based on past and present data." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q2",
+                  "title": "Planning Quiz",
+                  "questionCount": 2,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q2_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "What is the first step in the planning process?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Evaluating alternatives", "status": "distractor" },
+                        { "label": "B", "value": "Setting objectives", "status": "correct" },
+                        { "label": "C", "value": "Developing premises", "status": "distractor" },
+                        { "label": "D", "value": "Implementation", "status": "distractor" }
+                      ],
+                      "explanation": "Setting goals is the foundational step of any plan."
+                    },
+                    {
+                      "id": "abfm_q2_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "In PESTLE analysis, 'Interest Rates' fall under which category?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Political", "status": "distractor" },
+                        { "label": "B", "value": "Economic", "status": "correct" },
+                        { "label": "C", "value": "Social", "status": "distractor" },
+                        { "label": "D", "value": "Technological", "status": "distractor" }
+                      ],
+                      "explanation": "Economic factors include inflation, interest rates, and growth."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t3",
+              "name": "Organising & Change Management",
+              "summary": "Concepts of organizational structure, change models, and conflict dynamics.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l3_1",
+                  "title": "Lewin's Change Management Model",
+                  "durationMinutes": 10,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Kurt Lewin's model consists of three primary phases: Unfreeze, Change, and Refreeze." },
+                    { "type": "callout", "content": "Unfreeze: Preparing the organization for change by breaking the status quo.\nChange: The actual transition period.\nRefreeze: Reinforcing and stabilizing the new state." }
+                  ]
+                }
+,
+                {
+                  "id": "abfm_l3_2",
+                  "title": "Conflict Resolution Strategies",
+                  "durationMinutes": 8,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Effective conflict management involves several key strategies to minimize negative outcomes." },
+                    { "type": "table", "content": "Strategy,Action|Avoidance,Acting as if the problem doesn't exist (not recommended)|Collaboration,Bringing parties together to find a mutual solution|Negotiation,Compromising to reach an agreement" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q3",
+                  "title": "Organising Checkpoint",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q3_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which stage of Lewin's model involves stabilizing the change into the culture?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Unfreeze", "status": "distractor" },
+                        { "label": "B", "value": "Change", "status": "distractor" },
+                        { "label": "C", "value": "Refreeze", "status": "correct" }
+                      ],
+                      "explanation": "Refreeze is the final stage where the organization returns to stability with the new changes in place."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t4",
+              "name": "Staffing & HR Management",
+              "summary": "Recruitment, selection, training, and performance appraisal systems.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l4_1",
+                  "title": "The Selection Process",
+                  "durationMinutes": 12,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Selection is the process of choosing the best candidate from a pool of applicants." },
+                    { "type": "callout", "content": "Key Steps: Preliminary Interview -> Application -> Testing -> Formal Interview -> Reference Check -> Medical Test -> Final Selection." }
+                  ]
+                }
+              ],
+              "quizzes": [],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t5",
+              "name": "Directing & Leadership",
+              "summary": "Exploration of leadership styles, motivation theories, and communication in organizations.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l5_1",
+                  "title": "Leadership Models",
+                  "durationMinutes": 12,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Leadership involves inspiring and influencing others toward common goals. Different styles suit different organizational needs." },
+                    { "type": "table", "content": "Style,Core Feature|Authoritarian,One-man show; quick decisions but stifles creativity|Participative,Democratic; team involved in decision-making|Delegative,Laissez-faire; high autonomy for experienced staff|Transactional,Focused on rewards and punishments for routine work|Transformational,Visionary; inspires and empowers followers" }
+                  ]
+                },
+                {
+                  "id": "abfm_l5_2",
+                  "title": "Theories of Motivation",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Motivation is the internal drive that energizes behavior toward goals. Key theories include:" },
+                    { "type": "callout", "content": "Herzberg's Two-Factor Theory: Distinguishes between Hygiene factors (extrinsic, e.g., salary) and Motivating factors (intrinsic, e.g., achievement).\nVroom's Expectancy Theory: Motivation = Valence × Instrumentality × Expectancy." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q5",
+                  "title": "Directing Checkpoint",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q5_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which theory of motivation uses the equation M = V x I x E?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Herzberg's Theory", "status": "distractor" },
+                        { "label": "B", "value": "Vroom's Expectancy Theory", "status": "correct" },
+                        { "label": "C", "value": "McClelland's Theory", "status": "distractor" },
+                        { "label": "D", "value": "Equity Theory", "status": "distractor" }
+                      ],
+                      "explanation": "Victor Vroom's Expectancy Theory calculates motivation based on Valence, Instrumentality, and Expectancy."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t6",
+              "name": "Controlling Systems",
+              "summary": "Management control processes, traditional vs modern techniques, and IT controls.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l6_1",
+                  "title": "The Controlling Process",
+                  "durationMinutes": 10,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Controlling ensures that activities align with plans. The process involves four key steps:" },
+                    { "type": "callout", "content": "1. Establishing Goals & Standards\n2. Comparing Actual Performance to Goals\n3. Taking Corrective Action\n4. Monitoring Effects" }
+                  ]
+                },
+                {
+                  "id": "abfm_l6_2",
+                  "title": "Modern Control Techniques",
+                  "durationMinutes": 12,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Modern techniques offer sophisticated ways to manage performance and projects." },
+                    { "type": "table", "content": "Technique,Description|ROI (DuPont Method),Measures profit relative to capital invested|PERT & CPM,Project management tools for scheduling and sequence|Responsibility Accounting,Assigning accountability to specific centers (Cost, Revenue, Profit)|Management Audit,Scrutinizing the overall management process" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q6",
+                  "title": "Controlling Checkpoint",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q6_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "In project management, what does PERT stand for?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Project Evaluation and Research Task", "status": "distractor" },
+                        { "label": "B", "value": "Program Evaluation and Review Technique", "status": "correct" },
+                        { "label": "C", "value": "Performance Execution and Reporting Tool", "status": "distractor" }
+                      ],
+                      "explanation": "PERT stands for Program Evaluation and Review Technique."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        },
+        {
+          "id": "abfm_mb",
+          "name": "Module B: Adv. Concepts of Financial Mgmt",
+          "description": "Advanced financial management including capital budgeting, international projects, risk analysis, and strategic decision making.",
+          "topics": [
+            {
+              "id": "abfm_t7",
+              "name": "Sources of Finance",
+              "summary": "Analysis of equity, debt, preference capital, and internal accruals as business funding sources.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l7_1",
+                  "title": "Equity and Debt Financing",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Businesses raise funds through various channels depending on cost, control, and risk profile." },
+                    { "type": "table", "content": "Source,Key Advantage,Key Disadvantage|Equity Capital,No fixed repayment; strengthens balance sheet,High cost of servicing; dilution of control|Internal Accruals,No raising cost; readily available,May lead to indiscriminate investment|Preference Capital,Fixed dividend; no voting rights usually,Dividend is not tax-deductible|Term Loans,Tax-deductible interest; fixed cost,Requires security; fixed repayment burden" }
+                  ]
+                },
+                {
+                  "id": "abfm_l7_2",
+                  "title": "Debentures & Alternative Finance",
+                  "durationMinutes": 12,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Debentures are debt instruments issued by companies promising repayment at a future date with fixed interest." },
+                    { "type": "callout", "content": "Alternative Financing includes Private Equity (PE), Foreign Direct Investment (FDI), and FinTech solutions like P2P lending." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q7",
+                  "title": "Finance Sources Quiz",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q7_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which of the following is considered an internal source of finance?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Debentures", "status": "distractor" },
+                        { "label": "B", "value": "Retained Earnings", "status": "correct" },
+                        { "label": "C", "value": "Term Loans", "status": "distractor" },
+                        { "label": "D", "value": "Public Issue", "status": "distractor" }
+                      ],
+                      "explanation": "Retained earnings are profits ploughed back into the business, thus an internal source."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t8",
+              "name": "Financial & Operating Leverages",
+              "summary": "Understanding the impact of fixed costs and debt on business profitability and risk.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l8_1",
+                  "title": "Leverage Concepts",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Leverage involves using fixed costs (operating or financial) to magnify returns." },
+                    { "type": "equation", "content": "DFL = \\frac{EBIT}{EBT}" },
+                    { "type": "equation", "content": "DOL = \\frac{Contribution}{EBIT}" },
+                    { "type": "equation", "content": "DTL = DOL \\times DFL = \\frac{Contribution}{EBT}" },
+                    { "type": "callout", "content": "High operating leverage means small changes in sales lead to large changes in EBIT." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q8",
+                  "title": "Leverage Calculation",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q8_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "If DOL is 3 and DFL is 2, what is the Combined Leverage (DTL)?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "1.5", "status": "distractor" },
+                        { "label": "B", "value": "5", "status": "distractor" },
+                        { "label": "C", "value": "6", "status": "correct" }
+                      ],
+                      "explanation": "DTL = DOL x DFL = 3 x 2 = 6."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t9",
+              "name": "Capital Investment Decisions",
+              "summary": "Techniques for evaluating long-term investment projects using DCF and non-DCF methods.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l9_1",
+                  "title": "Investment Appraisal Methods",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Capital budgeting helps managers decide which projects to undertake to maximize shareholder wealth." },
+                    { "type": "table", "content": "Method,Description,Decision Rule|Payback Period,Time to recover initial outlay,Accept if < standard period|NPV,PV of Inflows - PV of Outflows,Accept if > 0|IRR,Rate where NPV = 0,Accept if > Cost of Capital|Profitability Index,PV Inflows / Initial Outlay,Accept if > 1" }
+                  ]
+                },
+                {
+                  "id": "abfm_l9_2",
+                  "title": "MIRR & SCBA",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Modified IRR (MIRR) corrects the reinvestment rate assumption of IRR. Social Cost Benefit Analysis (SCBA) is used for public projects to account for societal impact." }
+                  ]
+                }
+              ],
+              "quizzes": [],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t10",
+              "name": "International Capital Budgeting",
+              "summary": "Evaluating overseas projects, exchange rate risks, and international CAPM.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l10_1",
+                  "title": "Overseas Project Evaluation",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "International projects involve additional complexities like exchange rate fluctuations and political risk." },
+                    { "type": "callout", "content": "Home Currency Approach: Forecast foreign cash flows, convert to home currency using forward rates, and discount at home cost of capital." },
+                    { "type": "paragraph", "content": "Foreign Currency Approach: Discount foreign cash flows at foreign cost of capital, then convert NPV to home currency at spot rate." }
+                  ]
+                },
+                {
+                  "id": "abfm_l10_2",
+                  "title": "Risk & International CAPM",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "The Capital Asset Pricing Model (CAPM) is adjusted for international markets by considering global beta." },
+                    { "type": "equation", "content": "E(R_i) = R_f + \\beta_i(E(R_m) - R_f)" }
+                  ]
+                }
+              ],
+              "quizzes": [],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t11",
+              "name": "Risk & Uncertainty in Capital Budgeting",
+              "summary": "Techniques for assessing risk including sensitivity analysis, scenarios, and decision trees.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l11_1",
+                  "title": "Sensitivity & Scenario Analysis",
+                  "durationMinutes": 18,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Sensitivity analysis tests how changes in a single variable (e.g., sales volume) affect the project NPV." },
+                    { "type": "callout", "content": "Scenario analysis considers simultaneous changes in multiple variables to create Best, Worst, and Most Likely cases." }
+                  ]
+                },
+                {
+                  "id": "abfm_l11_2",
+                  "title": "Simulation & Decision Trees",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Monte Carlo simulation uses probability distributions for multiple variables to generate a range of possible NPVs." },
+                    { "type": "paragraph", "content": "Decision trees map out sequential decisions and their probabilistic outcomes graphically." }
+                  ]
+                }
+              ],
+              "quizzes": [],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t12",
+              "name": "Decision Making",
+              "summary": "Strategic decision making using CVP analysis, relevant costs, and Activity Based Costing.",
+              "examFormats": ["mcq", "numerical"],
+              "lessons": [
+                {
+                  "id": "abfm_l12_1",
+                  "title": "CVP Analysis & BEP",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Cost-Volume-Profit (CVP) analysis explores the relationship between costs, sales volume, and profit." },
+                    { "type": "equation", "content": "BEP (Units) = \\frac{Fixed Costs}{Contribution per Unit}" }
+                  ]
+                },
+                {
+                  "id": "abfm_l12_2",
+                  "title": "Relevant Cost & ABC",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Relevant costs are future costs that differ between alternatives. Sunk costs are ignored." },
+                    { "type": "callout", "content": "Activity Based Costing (ABC) assigns overheads based on 'cost drivers' rather than simple volume." }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q12",
+                  "title": "Decision Making Quiz",
+                  "questionCount": 2,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q12_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "An activity which generates costs is called a:" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Cost Pool", "status": "distractor" },
+                        { "label": "B", "value": "Cost Driver", "status": "correct" },
+                        { "label": "C", "value": "Cost Object", "status": "distractor" },
+                        { "label": "D", "value": "Cost Center", "status": "distractor" }
+                      ],
+                      "explanation": "In ABC, a cost driver is any factor that causes a change in the cost of an activity."
+                    },
+                    {
+                      "id": "abfm_q12_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which of the following is NOT a relevant cost?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Incremental labor", "status": "distractor" },
+                        { "label": "B", "value": "Opportunity cost", "status": "distractor" },
+                        { "label": "C", "value": "Sunk cost", "status": "correct" },
+                        { "label": "D", "value": "Avoidable overhead", "status": "distractor" }
+                      ],
+                      "explanation": "Sunk costs are historical costs and do not change between alternatives."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        },
+        {
+          "id": "abfm_mc",
+          "name": "Module C: Valuation, Mergers & Acquisitions",
+          "description": "Corporate valuation techniques, DCF models, and M&A strategies.",
+          "topics": [
+            {
+              "id": "abfm_t13",
+              "name": "Corporate Valuation",
+              "summary": "Introduction to valuation principles, book value vs. market value, and standard valuation approaches.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l13_1",
+                  "title": "Concepts of Value",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Corporate valuation determines the worth of an entity for mergers, acquisitions, or strategic planning." },
+                    { "type": "callout", "content": "Book Value: Based on financials/balance sheet.\nMarket Value: Market capitalization (Price x Shares).\nEnterprise Value (EV): Firm value including debt less cash." },
+                    { "type": "equation", "content": "EV = Equity Value + Total Debt - Cash \\& Equivalents" }
+                  ]
+                },
+                {
+                  "id": "abfm_l13_2",
+                  "title": "Valuation Approaches (IVS 105)",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "The International Valuation Standards (IVS) 105 defines three primary approaches." },
+                    { "type": "table", "content": "Approach,Description,Key Method|Market Approach,Uses transaction prices of comparable assets,Direct Comparison|Income Approach,Present value of expected future cash flows,DCF Approach|Cost Approach,Sum of fair market value of net assets,Adjusted Book Value" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q13",
+                  "title": "Corporate Valuation Quiz",
+                  "questionCount": 2,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q13_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which valuation approach determines the cost to build or replace a business?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Income Approach", "status": "distractor" },
+                        { "label": "B", "value": "Market Approach", "status": "distractor" },
+                        { "label": "C", "value": "Cost Approach", "status": "correct" },
+                        { "label": "D", "value": "DCF Approach", "status": "distractor" }
+                      ],
+                      "explanation": "The cost approach (asset-based) focuses on the value of assets minus liabilities."
+                    },
+                    {
+                      "id": "abfm_q13_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Enterprise Value is synonymous with:" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Equity Value", "status": "distractor" },
+                        { "label": "B", "value": "Firm Value", "status": "correct" },
+                        { "label": "C", "value": "Book Value", "status": "distractor" },
+                        { "label": "D", "value": "Liquidation Value", "status": "distractor" }
+                      ],
+                      "explanation": "Enterprise Value represents the value of the entire business entity to all capital providers."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        },
+        {
+          "id": "abfm_md",
+          "name": "Module D: Emerging Business Solutions",
+          "description": "Hybrid finance, startups, AI, business analytics, and green financing.",
+          "topics": [
+            {
+              "id": "abfm_t23",
+              "name": "Business Analytics",
+              "summary": "Big data, data processing types, Hadoop/Spark ecosystem, and web analytics.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l23_1",
+                  "title": "Big Data Analytics",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Big Data analytics involves extracting insights from massive datasets that traditional software cannot handle." },
+                    { "type": "callout", "content": "Batch Processing: Large volumes of data at once (e.g., end-of-day reports).\nStream Processing: Continuous data flow (e.g., real-time fraud detection)." },
+                    { "type": "table", "content": "Tool,Description|Hadoop,Distributed storage and processing (MapReduce)|Spark,In-memory processing for faster speed|Tableau,Data visualization and BI tool" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q23",
+                  "title": "Business Analytics Quiz",
+                  "questionCount": 1,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q23_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which tool is known for in-memory processing of big data?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Hadoop", "status": "distractor" },
+                        { "label": "B", "value": "Spark", "status": "correct" },
+                        { "label": "C", "value": "MySQL", "status": "distractor" },
+                        { "label": "D", "value": "Excel", "status": "distractor" }
+                      ],
+                      "explanation": "Apache Spark is designed for in-memory processing, making it significantly faster than disk-based Hadoop MapReduce for certain tasks."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t24",
+              "name": "Green and Sustainable Financing",
+              "summary": "ESG criteria, green bonds, ISO standards, and RBI's stance on climate risk.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l24_1",
+                  "title": "Introduction to Green Finance",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "Green finance refers to financial investments flowing into sustainable development projects and initiatives that environmental benefits." },
+                    { "type": "callout", "content": "ESG: Environmental, Social, and Governance criteria used to measure sustainability impact." },
+                    { "type": "paragraph", "content": "ISO Standards for Sustainable Finance:" },
+                    { "type": "table", "content": "Standard,Purpose|ISO 32210,Framework for sustainable finance principles|ISO 14008,Monetary valuation of environmental impacts|ISO 14007,Guidelines for environmental costs and benefits" }
+                  ]
+                },
+                {
+                  "id": "abfm_l24_2",
+                  "title": "RBI and Climate Risk",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "The RBI joined the Network for Greening the Financial System (NGFS) in 2021 and set up a Sustainable Finance Group (SFG)." },
+                    { "type": "callout", "content": "Types of Climate Risks:\n1. Physical Risks (Extreme weather)\n2. Transition Risks (Adjustment to low-carbon economy)\n3. Liability Risks (Compensation claims)" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q24",
+                  "title": "Green Finance Quiz",
+                  "questionCount": 2,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q24_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Which ISO standard provides the framework for sustainable finance principles and guidance?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "ISO 9001", "status": "distractor" },
+                        { "label": "B", "value": "ISO 14001", "status": "distractor" },
+                        { "label": "C", "value": "ISO 32210", "status": "correct" },
+                        { "label": "D", "value": "ISO 45001", "status": "distractor" }
+                      ],
+                      "explanation": "ISO 32210 is the first standard designed to provide an overarching structure in the field of sustainable finance."
+                    },
+                    {
+                      "id": "abfm_q24_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "Risks arising from people seeking compensation for losses suffered from climate events are called:" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "Physical Risks", "status": "distractor" },
+                        { "label": "B", "value": "Transition Risks", "status": "distractor" },
+                        { "label": "C", "value": "Liability Risks", "status": "correct" },
+                        { "label": "D", "value": "Market Risks", "status": "distractor" }
+                      ],
+                      "explanation": "Liability risks arise from parties seeking compensation for losses suffered from physical or transition risks."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            },
+            {
+              "id": "abfm_t25",
+              "name": "Special Purpose Acquisition Companies (SPACs)",
+              "summary": "Fundamentals, advantages, disadvantages, and the De-SPAC process.",
+              "examFormats": ["mcq"],
+              "lessons": [
+                {
+                  "id": "abfm_l25_1",
+                  "title": "Introduction to SPACs",
+                  "durationMinutes": 15,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "A SPAC is a shell company incorporated purely to raise capital through an IPO to acquire or merge with an existing company." },
+                    { "type": "callout", "content": "Also known as 'Blank Cheque Companies'.\nTimeline: Usually 18-24 months to complete a merger." }
+                  ]
+                },
+                {
+                  "id": "abfm_l25_2",
+                  "title": "The De-SPAC Process",
+                  "durationMinutes": 20,
+                  "format": "note",
+                  "blocks": [
+                    { "type": "paragraph", "content": "The process of the SPAC merging with a target company is called 'De-SPACing'." },
+                    { "type": "table", "content": "Stakeholder,Role|Sponsors,Start the process and fund administrative costs|Investors,Provide the bulk of capital via IPO|Targets,Private companies seeking to go public quickly" }
+                  ]
+                }
+              ],
+              "quizzes": [
+                {
+                  "id": "abfm_q25",
+                  "title": "SPAC Quiz",
+                  "questionCount": 2,
+                  "mode": "standard",
+                  "examFormat": "mcq",
+                  "questions": [
+                    {
+                      "id": "abfm_q25_1",
+                      "promptBlocks": [{ "type": "paragraph", "content": "What percentage of stake do SPAC sponsors typically own through founder shares?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "10%", "status": "distractor" },
+                        { "label": "B", "value": "20%", "status": "correct" },
+                        { "label": "C", "value": "30%", "status": "distractor" },
+                        { "label": "D", "value": "50%", "status": "distractor" }
+                      ],
+                      "explanation": "SPAC sponsors typically receive founder shares amounting to 20% of the equity raised."
+                    },
+                    {
+                      "id": "abfm_q25_2",
+                      "promptBlocks": [{ "type": "paragraph", "content": "What happens if a SPAC fails to complete a merger within the allotted timeframe?" }],
+                      "examFormat": "mcq",
+                      "options": [
+                        { "label": "A", "value": "It stays public forever", "status": "distractor" },
+                        { "label": "B", "value": "It is liquidated and funds are returned to investors", "status": "correct" },
+                        { "label": "C", "value": "The management team keeps the money", "status": "distractor" },
+                        { "label": "D", "value": "It becomes a traditional bank", "status": "distractor" }
+                      ],
+                      "explanation": "If no merger occurs within 18-24 months, the SPAC is liquidated and IPO proceeds are returned to public shareholders."
+                    }
+                  ]
+                }
+              ],
+              "progress": { "completedLessons": 0, "masteryPercent": 0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brbl",
+      "name": "Banking Regs & Business Laws",
+      "description": "Legal aspects of banking, including the Banking Regulation Act and contract laws.",
+      "examFormats": ["mcq", "descriptive"],
+      "isPremium": false,
+      "price": 0,
+      "modules": []
+    }
+  ],
+  "schemaVersion": 1
+}

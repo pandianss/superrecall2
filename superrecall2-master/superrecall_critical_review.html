@@ -1,0 +1,113 @@
+
+<style>
+  .review { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .section { margin-bottom: 2rem; }
+  .section-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+  .finding { display: flex; gap: 12px; padding: 12px 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 8px; background: var(--color-background-primary); }
+  .finding.critical { border-left: 3px solid #E24B4A; }
+  .finding.warning { border-left: 3px solid #EF9F27; }
+  .finding.good { border-left: 3px solid #639922; }
+  .badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 100px; white-space: nowrap; align-self: flex-start; margin-top: 1px; }
+  .badge.critical { background: #FCEBEB; color: #A32D2D; }
+  .badge.warning { background: #FAEEDA; color: #854F0B; }
+  .badge.good { background: #EAF3DE; color: #3B6D11; }
+  .finding-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.55; flex: 1; }
+  .finding-text code { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-secondary); padding: 1px 5px; border-radius: 4px; }
+  .scorerow { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+  .score-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 12px; text-align: center; }
+  .score-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .score-val { font-size: 22px; font-weight: 500; }
+  .score-val.red { color: #E24B4A; }
+  .score-val.amber { color: #BA7517; }
+  .score-val.green { color: #3B6D11; }
+</style>
+<div class="review" role="region" aria-label="SuperRecall critical code review">
+
+  <div class="scorerow">
+    <div class="score-card"><div class="score-label">Architecture</div><div class="score-val green">B+</div></div>
+    <div class="score-card"><div class="score-label">Correctness</div><div class="score-val red">D</div></div>
+    <div class="score-card"><div class="score-label">Security</div><div class="score-val red">D+</div></div>
+    <div class="score-card"><div class="score-label">Test coverage</div><div class="score-val amber">C</div></div>
+    <div class="score-card"><div class="score-label">Overall</div><div class="score-val amber">C</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔴 Critical — ships broken or insecure</div>
+
+    <div class="finding critical">
+      <span class="badge critical">Bug</span>
+      <div class="finding-text"><strong>Provider declaration order crash.</strong> In <code>app.dart</code>, <code>SrsController</code> and <code>EngagementController</code> are declared via <code>ChangeNotifierProxyProvider2&lt;StorageService, SyncService, …&gt;</code> at the top of the list, but <code>SyncService</code> isn't registered as a <code>Provider</code> until near the bottom. <code>MultiProvider</code> builds in order — this crashes with a "could not find the correct Provider" error at startup on every platform.</div>
+    </div>
+
+    <div class="finding critical">
+      <span class="badge critical">Security</span>
+      <div class="finding-text"><strong>Real Firebase API key committed to source.</strong> <code>firebase_options.dart</code> contains a live <code>apiKey</code>, <code>appId</code>, <code>messagingSenderId</code>, and <code>projectId</code>. Anyone with access to the repo can write to or read from the Firestore collection unless Firestore security rules are locked down. Rotate the key and move secrets to environment injection or gitignored files.</div>
+    </div>
+
+    <div class="finding critical">
+      <span class="badge critical">Bug</span>
+      <div class="finding-text"><strong>Firebase not configured for Android or iOS.</strong> <code>DefaultFirebaseOptions.currentPlatform</code> throws <code>UnsupportedError</code> for every native platform. The app is built for mobile-first learners, yet it literally cannot initialise Firebase on Android or iOS. The FlutterFire CLI was only run for web.</div>
+    </div>
+
+    <div class="finding critical">
+      <span class="badge critical">Data loss</span>
+      <div class="finding-text"><strong>Sign-out destroys all local data.</strong> <code>SyncService.signOut()</code> calls <code>_storage.clearAll()</code> before re-signing-in anonymously. An anonymous user who accidentally taps "sign out" loses every lesson and SRS interval permanently, with no confirmation dialog and no way to recover.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🟡 Warnings — correctness and design issues</div>
+
+    <div class="finding warning">
+      <span class="badge warning">Serialisation</span>
+      <div class="finding-text"><strong>Save/load format mismatch for <code>monthsToGoal</code>.</strong> <code>ProgressController._save()</code> writes <code>monthsToGoal</code> into the progress blob, but <code>StorageService.saveProgress()</code> only persists <code>completedLessons</code> and <code>quizAttempts</code>. The goal setting is silently dropped on every restart.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">Design</span>
+      <div class="finding-text"><strong><code>LearningSessionController</code> is a plain <code>ProxyProvider</code>, not a <code>ChangeNotifierProxyProvider</code>.</strong> It cannot call <code>notifyListeners()</code>, so any widget watching the session queue will never rebuild when the queue changes. This likely makes the daily session screen appear stale after completing items.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">UX risk</span>
+      <div class="finding-text"><strong>AI features require users to supply a Gemini API key.</strong> The bring-your-own-key model is a significant friction point for the target audience (working professionals, not developers). Most users will never reach the AI explanation or quiz generation features. Consider a free-tier quota or a shared backend key.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">SRS</span>
+      <div class="finding-text"><strong>Ease-factor ceiling caps learning acceleration.</strong> The ease factor is clamped at <code>2.5</code> (the SM-2 default) rather than, say, <code>3.0</code>. Users who perform well consistently never see their intervals grow faster than average, which undercuts the "adaptive" promise.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">Sync</span>
+      <div class="finding-text"><strong>No merge strategy on cloud pull.</strong> <code>pullRemoteProgress()</code> overwrites local state with whatever Firestore returns. If a user studies offline and then connects, their offline progress is silently replaced rather than merged. A timestamp-based last-write-wins or union merge is needed.</div>
+    </div>
+
+    <div class="finding warning">
+      <span class="badge warning">Docs</span>
+      <div class="finding-text"><strong>README references stale file paths.</strong> <code>lib/screens/home_page.dart</code>, <code>lib/models/learning_models.dart</code> are cited but the real paths are under <code>lib/features/study/…</code>. A new contributor following the README will be confused immediately.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🟢 What's solid</div>
+
+    <div class="finding good">
+      <span class="badge good">Architecture</span>
+      <div class="finding-text"><strong>Clean feature-based folder structure.</strong> Splitting by <code>study / ai / engagement</code> with sub-layers (domain, presentation, state) is well-suited for this scale and makes future contributors productive quickly.</div>
+    </div>
+    <div class="finding good">
+      <span class="badge good">Reliability</span>
+      <div class="finding-text"><strong>Debounced sync and upsert-mode writes are well-thought-out.</strong> The 3-second debounce on <code>pushLocalProgress()</code> and the avoidance of <code>clear()</code> before Isar writes both prevent data loss on crash or rapid input.</div>
+    </div>
+    <div class="finding good">
+      <span class="badge good">Testability</span>
+      <div class="finding-text"><strong><code>clock</code> package enables deterministic SRS tests.</strong> Using <code>withClock(Clock.fixed(…))</code> in tests means SRS scheduling is fully reproducible — the right call for an algorithm where timing is the core logic.</div>
+    </div>
+    <div class="finding good">
+      <span class="badge good">Security</span>
+      <div class="finding-text"><strong>Gemini key stored in <code>flutter_secure_storage</code>.</strong> Even though the UX is friction-heavy, the key at least never hits disk in plaintext. Good practice for credentials that users do supply.</div>
+    </div>
+  </div>
+
+</div>
