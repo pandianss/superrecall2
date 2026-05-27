@@ -6,6 +6,8 @@ class ReviewInterval {
     required this.easeFactor,
     required this.repetitions,
     this.lastReviewedDate,
+    this.recallStrength = 0.5,
+    this.consecutiveFailures = 0,
   });
 
   final String itemId;
@@ -14,6 +16,8 @@ class ReviewInterval {
   final int intervalDays;
   final double easeFactor;
   final int repetitions;
+  final double recallStrength; // 0.0 - 1.0, higher = stronger memory
+  final int consecutiveFailures;
 
   Map<String, dynamic> toJson() => {
         'itemId': itemId,
@@ -21,7 +25,9 @@ class ReviewInterval {
         'lastReviewedDate': lastReviewedDate?.toIso8601String(),
         'intervalDays': intervalDays,
         'easeFactor': easeFactor,
-        'repetitions': repetitions,
+      'repetitions': repetitions,
+      'recallStrength': recallStrength,
+      'consecutiveFailures': consecutiveFailures,
       };
 
   factory ReviewInterval.fromJson(Map<String, dynamic> json) => ReviewInterval(
@@ -33,5 +39,7 @@ class ReviewInterval {
         intervalDays: json['intervalDays'] as int,
         easeFactor: (json['easeFactor'] as num).toDouble(),
         repetitions: json['repetitions'] as int? ?? 0,
+        recallStrength: (json['recallStrength'] as num?)?.toDouble() ?? 0.5,
+        consecutiveFailures: json['consecutiveFailures'] as int? ?? 0,
       );
 }

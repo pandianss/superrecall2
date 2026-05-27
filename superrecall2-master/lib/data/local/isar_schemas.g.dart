@@ -17,28 +17,38 @@ const SrsIntervalSchemaSchema = CollectionSchema(
   name: r'SrsIntervalSchema',
   id: 3271109152694939136,
   properties: {
-    r'easeFactor': PropertySchema(
+    r'consecutiveFailures': PropertySchema(
       id: 0,
+      name: r'consecutiveFailures',
+      type: IsarType.long,
+    ),
+    r'easeFactor': PropertySchema(
+      id: 1,
       name: r'easeFactor',
       type: IsarType.double,
     ),
     r'intervalDays': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'intervalDays',
       type: IsarType.long,
     ),
     r'itemId': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'itemId',
       type: IsarType.string,
     ),
     r'nextReview': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'nextReview',
       type: IsarType.dateTime,
     ),
+    r'recallStrength': PropertySchema(
+      id: 5,
+      name: r'recallStrength',
+      type: IsarType.double,
+    ),
     r'repetitions': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'repetitions',
       type: IsarType.long,
     )
@@ -87,11 +97,13 @@ void _srsIntervalSchemaSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.easeFactor);
-  writer.writeLong(offsets[1], object.intervalDays);
-  writer.writeString(offsets[2], object.itemId);
-  writer.writeDateTime(offsets[3], object.nextReview);
-  writer.writeLong(offsets[4], object.repetitions);
+  writer.writeLong(offsets[0], object.consecutiveFailures);
+  writer.writeDouble(offsets[1], object.easeFactor);
+  writer.writeLong(offsets[2], object.intervalDays);
+  writer.writeString(offsets[3], object.itemId);
+  writer.writeDateTime(offsets[4], object.nextReview);
+  writer.writeDouble(offsets[5], object.recallStrength);
+  writer.writeLong(offsets[6], object.repetitions);
 }
 
 SrsIntervalSchema _srsIntervalSchemaDeserialize(
@@ -101,12 +113,14 @@ SrsIntervalSchema _srsIntervalSchemaDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SrsIntervalSchema();
-  object.easeFactor = reader.readDouble(offsets[0]);
+  object.consecutiveFailures = reader.readLong(offsets[0]);
+  object.easeFactor = reader.readDouble(offsets[1]);
   object.id = id;
-  object.intervalDays = reader.readLong(offsets[1]);
-  object.itemId = reader.readString(offsets[2]);
-  object.nextReview = reader.readDateTime(offsets[3]);
-  object.repetitions = reader.readLong(offsets[4]);
+  object.intervalDays = reader.readLong(offsets[2]);
+  object.itemId = reader.readString(offsets[3]);
+  object.nextReview = reader.readDateTime(offsets[4]);
+  object.recallStrength = reader.readDouble(offsets[5]);
+  object.repetitions = reader.readLong(offsets[6]);
   return object;
 }
 
@@ -118,14 +132,18 @@ P _srsIntervalSchemaDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDouble(offset)) as P;
-    case 1:
       return (reader.readLong(offset)) as P;
+    case 1:
+      return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readDateTime(offset)) as P;
+    case 5:
+      return (reader.readDouble(offset)) as P;
+    case 6:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -328,6 +346,62 @@ extension SrsIntervalSchemaQueryWhere
 
 extension SrsIntervalSchemaQueryFilter
     on QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QFilterCondition> {
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      consecutiveFailuresEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'consecutiveFailures',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      consecutiveFailuresGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'consecutiveFailures',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      consecutiveFailuresLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'consecutiveFailures',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      consecutiveFailuresBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'consecutiveFailures',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
       easeFactorEqualTo(
     double value, {
@@ -699,6 +773,72 @@ extension SrsIntervalSchemaQueryFilter
   }
 
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      recallStrengthEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'recallStrength',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      recallStrengthGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'recallStrength',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      recallStrengthLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'recallStrength',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
+      recallStrengthBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'recallStrength',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterFilterCondition>
       repetitionsEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -764,6 +904,20 @@ extension SrsIntervalSchemaQueryLinks
 extension SrsIntervalSchemaQuerySortBy
     on QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QSortBy> {
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      sortByConsecutiveFailures() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'consecutiveFailures', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      sortByConsecutiveFailuresDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'consecutiveFailures', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
       sortByEaseFactor() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'easeFactor', Sort.asc);
@@ -820,6 +974,20 @@ extension SrsIntervalSchemaQuerySortBy
   }
 
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      sortByRecallStrength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recallStrength', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      sortByRecallStrengthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recallStrength', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
       sortByRepetitions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'repetitions', Sort.asc);
@@ -836,6 +1004,20 @@ extension SrsIntervalSchemaQuerySortBy
 
 extension SrsIntervalSchemaQuerySortThenBy
     on QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QSortThenBy> {
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      thenByConsecutiveFailures() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'consecutiveFailures', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      thenByConsecutiveFailuresDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'consecutiveFailures', Sort.desc);
+    });
+  }
+
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
       thenByEaseFactor() {
     return QueryBuilder.apply(this, (query) {
@@ -906,6 +1088,20 @@ extension SrsIntervalSchemaQuerySortThenBy
   }
 
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      thenByRecallStrength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recallStrength', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
+      thenByRecallStrengthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'recallStrength', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QAfterSortBy>
       thenByRepetitions() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'repetitions', Sort.asc);
@@ -922,6 +1118,13 @@ extension SrsIntervalSchemaQuerySortThenBy
 
 extension SrsIntervalSchemaQueryWhereDistinct
     on QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QDistinct> {
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QDistinct>
+      distinctByConsecutiveFailures() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'consecutiveFailures');
+    });
+  }
+
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QDistinct>
       distinctByEaseFactor() {
     return QueryBuilder.apply(this, (query) {
@@ -951,6 +1154,13 @@ extension SrsIntervalSchemaQueryWhereDistinct
   }
 
   QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QDistinct>
+      distinctByRecallStrength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'recallStrength');
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, SrsIntervalSchema, QDistinct>
       distinctByRepetitions() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'repetitions');
@@ -963,6 +1173,13 @@ extension SrsIntervalSchemaQueryProperty
   QueryBuilder<SrsIntervalSchema, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, int, QQueryOperations>
+      consecutiveFailuresProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'consecutiveFailures');
     });
   }
 
@@ -990,6 +1207,13 @@ extension SrsIntervalSchemaQueryProperty
       nextReviewProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'nextReview');
+    });
+  }
+
+  QueryBuilder<SrsIntervalSchema, double, QQueryOperations>
+      recallStrengthProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'recallStrength');
     });
   }
 
@@ -4709,6 +4933,1025 @@ extension PurchasedSubjectSchemaQueryProperty on QueryBuilder<
       subjectIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'subjectId');
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+extension GetSessionCheckpointSchemaCollection on Isar {
+  IsarCollection<SessionCheckpointSchema> get sessionCheckpointSchemas =>
+      this.collection();
+}
+
+const SessionCheckpointSchemaSchema = CollectionSchema(
+  name: r'SessionCheckpointSchema',
+  id: 3191832620331724800,
+  properties: {
+    r'currentIndex': PropertySchema(
+      id: 0,
+      name: r'currentIndex',
+      type: IsarType.long,
+    ),
+    r'examId': PropertySchema(
+      id: 1,
+      name: r'examId',
+      type: IsarType.string,
+    ),
+    r'queueJson': PropertySchema(
+      id: 2,
+      name: r'queueJson',
+      type: IsarType.string,
+    ),
+    r'savedAt': PropertySchema(
+      id: 3,
+      name: r'savedAt',
+      type: IsarType.dateTime,
+    ),
+    r'subIndex': PropertySchema(
+      id: 4,
+      name: r'subIndex',
+      type: IsarType.long,
+    )
+  },
+  estimateSize: _sessionCheckpointSchemaEstimateSize,
+  serialize: _sessionCheckpointSchemaSerialize,
+  deserialize: _sessionCheckpointSchemaDeserialize,
+  deserializeProp: _sessionCheckpointSchemaDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {},
+  embeddedSchemas: {},
+  getId: _sessionCheckpointSchemaGetId,
+  getLinks: _sessionCheckpointSchemaGetLinks,
+  attach: _sessionCheckpointSchemaAttach,
+  version: '3.1.0+1',
+);
+
+int _sessionCheckpointSchemaEstimateSize(
+  SessionCheckpointSchema object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.examId.length * 3;
+  {
+    final value = object.queueJson;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _sessionCheckpointSchemaSerialize(
+  SessionCheckpointSchema object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeLong(offsets[0], object.currentIndex);
+  writer.writeString(offsets[1], object.examId);
+  writer.writeString(offsets[2], object.queueJson);
+  writer.writeDateTime(offsets[3], object.savedAt);
+  writer.writeLong(offsets[4], object.subIndex);
+}
+
+SessionCheckpointSchema _sessionCheckpointSchemaDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = SessionCheckpointSchema();
+  object.currentIndex = reader.readLong(offsets[0]);
+  object.examId = reader.readString(offsets[1]);
+  object.id = id;
+  object.queueJson = reader.readStringOrNull(offsets[2]);
+  object.savedAt = reader.readDateTimeOrNull(offsets[3]);
+  object.subIndex = reader.readLongOrNull(offsets[4]);
+  return object;
+}
+
+P _sessionCheckpointSchemaDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readLong(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+Id _sessionCheckpointSchemaGetId(SessionCheckpointSchema object) {
+  return object.id;
+}
+
+List<IsarLinkBase<dynamic>> _sessionCheckpointSchemaGetLinks(
+    SessionCheckpointSchema object) {
+  return [];
+}
+
+void _sessionCheckpointSchemaAttach(
+    IsarCollection<dynamic> col, Id id, SessionCheckpointSchema object) {
+  object.id = id;
+}
+
+extension SessionCheckpointSchemaQueryWhereSort
+    on QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QWhere> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterWhere>
+      anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQueryWhere on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QWhereClause> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQueryFilter on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QFilterCondition> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> currentIndexEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'currentIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> currentIndexGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'currentIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> currentIndexLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'currentIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> currentIndexBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'currentIndex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'examId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+          QAfterFilterCondition>
+      examIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'examId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+          QAfterFilterCondition>
+      examIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'examId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'examId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> examIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'examId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> idEqualTo(Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'queueJson',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'queueJson',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'queueJson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+          QAfterFilterCondition>
+      queueJsonContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'queueJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+          QAfterFilterCondition>
+      queueJsonMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'queueJson',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'queueJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> queueJsonIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'queueJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'savedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'savedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'savedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'savedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> savedAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'savedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'subIndex',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'subIndex',
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'subIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'subIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'subIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema,
+      QAfterFilterCondition> subIndexBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'subIndex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQueryObject on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QFilterCondition> {}
+
+extension SessionCheckpointSchemaQueryLinks on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QFilterCondition> {}
+
+extension SessionCheckpointSchemaQuerySortBy
+    on QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QSortBy> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByCurrentIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentIndex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByCurrentIndexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentIndex', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByExamId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'examId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByExamIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'examId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByQueueJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'queueJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortByQueueJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'queueJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortBySavedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortBySavedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortBySubIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'subIndex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      sortBySubIndexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'subIndex', Sort.desc);
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQuerySortThenBy on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QSortThenBy> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByCurrentIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentIndex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByCurrentIndexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'currentIndex', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByExamId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'examId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByExamIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'examId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByQueueJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'queueJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenByQueueJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'queueJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenBySavedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenBySavedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'savedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenBySubIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'subIndex', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QAfterSortBy>
+      thenBySubIndexDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'subIndex', Sort.desc);
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQueryWhereDistinct on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QDistinct> {
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QDistinct>
+      distinctByCurrentIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'currentIndex');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QDistinct>
+      distinctByExamId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'examId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QDistinct>
+      distinctByQueueJson({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'queueJson', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QDistinct>
+      distinctBySavedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'savedAt');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, SessionCheckpointSchema, QDistinct>
+      distinctBySubIndex() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'subIndex');
+    });
+  }
+}
+
+extension SessionCheckpointSchemaQueryProperty on QueryBuilder<
+    SessionCheckpointSchema, SessionCheckpointSchema, QQueryProperty> {
+  QueryBuilder<SessionCheckpointSchema, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, int, QQueryOperations>
+      currentIndexProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'currentIndex');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, String, QQueryOperations>
+      examIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'examId');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, String?, QQueryOperations>
+      queueJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'queueJson');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, DateTime?, QQueryOperations>
+      savedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'savedAt');
+    });
+  }
+
+  QueryBuilder<SessionCheckpointSchema, int?, QQueryOperations>
+      subIndexProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'subIndex');
     });
   }
 }

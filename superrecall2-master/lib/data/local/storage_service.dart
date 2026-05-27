@@ -26,6 +26,7 @@ class StorageService {
           EngagementSchemaSchema,
           AppSettingsSchemaSchema,
           PurchasedSubjectSchemaSchema,
+          SessionCheckpointSchemaSchema,
         ],
         directory: path,
       );
@@ -163,6 +164,8 @@ class StorageService {
         'easeFactor': i.easeFactor,
         'nextReviewDate': i.nextReview.toIso8601String(),
         'repetitions': i.repetitions,
+        'recallStrength': i.recallStrength,
+        'consecutiveFailures': i.consecutiveFailures,
       }
     };
   }
@@ -176,9 +179,11 @@ class StorageService {
         await _isar!.srsIntervalSchemas.put(SrsIntervalSchema()
           ..itemId = entry.key
           ..intervalDays = val['intervalDays']
-          ..easeFactor = val['easeFactor']
+          ..easeFactor = (val['easeFactor'] as num).toDouble()
           ..nextReview = DateTime.parse(val['nextReviewDate'])
-          ..repetitions = val['repetitions'] ?? 0);
+          ..repetitions = val['repetitions'] ?? 0
+          ..recallStrength = (val['recallStrength'] as num?)?.toDouble() ?? 0.5
+          ..consecutiveFailures = val['consecutiveFailures'] ?? 0);
       }
     });
   }
@@ -251,6 +256,7 @@ class StorageService {
       'progress': await getProgress() ?? {},
       'srs': await getSrsIntervals() ?? {},
       'engagement': await getEngagementMetrics() ?? {},
+      'checkpoint': await getSessionCheckpoint() ?? {},
     };
   }
 
@@ -258,5 +264,41 @@ class StorageService {
     if (data['progress'] != null) await saveProgress(data['progress']);
     if (data['srs'] != null) await saveSrsIntervals(data['srs']);
     if (data['engagement'] != null) await saveEngagementMetrics(data['engagement']);
+    if (data['checkpoint'] != null) await saveSessionCheckpoint(data['checkpoint']);
+  }
+
+  // Session checkpoint
+  Future<Map<String, dynamic>?> getSessionCheckpoint() async {
+    if (_isar == null) return null;
+    final chk = await _isar!.sessionCheckpointSchemas.get(0);
+    if (chk == null) return null;
+    return {
+      'examId': chk.examId,
+      'currentIndex': chk.currentIndex,
+      'savedAt': chk.savedAt?.toIso8601String(),
+      'queueJson': chk.queueJson,
+      'subIndex': chk.subIndex,
+    };
+  }
+
+  Future<void> saveSessionCheckpoint(Map<String, dynamic> data) async {
+    if (_isar == null) return;
+    await _isar!.writeTxn(() async {
+      final chk = SessionCheckpointSchema()
+        ..id = 0
+        ..examId = data['examId'] as String
+        ..currentIndex = data['currentIndex'] as int
+        ..savedAt = data['savedAt'] != null ? DateTime.parse(data['savedAt']) : DateTime.now()
+        ..queueJson = data['queueJson'] as String?
+        ..subIndex = data['subIndex'] as int?;
+      await _isar!.sessionCheckpointSchemas.put(chk);
+    });
+  }
+
+  Future<void> clearSessionCheckpoint() async {
+    if (_isar == null) return;
+    await _isar!.writeTxn(() async {
+      await _isar!.sessionCheckpointSchemas.delete(0);
+    });
   }
 }

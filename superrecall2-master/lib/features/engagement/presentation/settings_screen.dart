@@ -6,7 +6,9 @@ import '../state/notification_controller.dart';
 import '../../study/state/progress_controller.dart';
 import '../../../data/local/storage_service.dart';
 import '../../../data/remote/sync_service.dart';
+import '../../../data/repositories/catalog_repository.dart';
 import '../../../core/theme/app_colors.dart';
+import 'analytics_dashboard_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -33,8 +35,30 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('Exam Preparation Goal'),
             subtitle: Text('${progress.monthsToGoal} ${progress.monthsToGoal == 1 ? 'Month' : 'Months'} Plan'),
+            leading: Icon(Icons.calendar_today_rounded, color: colors.accentPrimary),
             trailing: Icon(Icons.chevron_right_rounded, color: colors.textMuted),
             onTap: () => _showGoalPicker(context, progress),
+          ),
+          ListTile(
+            title: const Text('Performance & Mastery Insights'),
+            subtitle: const Text('Track subject progress and spaced repetition stats'),
+            leading: Icon(Icons.insights_rounded, color: colors.accentPrimary),
+            trailing: Icon(Icons.chevron_right_rounded, color: colors.textMuted),
+            onTap: () {
+              final repo = context.read<CatalogRepository>();
+              if (repo.exams.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AnalyticsDashboardScreen(exam: repo.exams.first),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('No active exam loaded.')),
+                );
+              }
+            },
           ),
           Divider(color: colors.borderSubtle),
           _SectionHeader(title: 'Sync & Identity'),

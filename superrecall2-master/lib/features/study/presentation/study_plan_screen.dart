@@ -8,6 +8,7 @@ import '../domain/learning_models.dart';
 import '../state/progress_controller.dart';
 import '../../ai/state/ai_quiz_controller.dart';
 import '../../ai/presentation/ai_quiz_result_screen.dart';
+import 'widgets/paywall_bottom_sheet.dart';
 
 class StudyPlanScreen extends StatelessWidget {
   const StudyPlanScreen({
@@ -448,11 +449,25 @@ class _LessonRow extends StatelessWidget {
     final colors = context.appColors;
     final completed = context.select<ProgressController, bool>((p) => p.isLessonCompleted(lesson.id));
 
+    final repo = context.read<CatalogRepository>();
+    final progressStore = context.watch<ProgressController>();
+    final subject = repo.getSubjectForLesson(lesson.id);
+    final module = repo.getModuleForLesson(lesson.id);
+    final isLocked = subject != null &&
+        module != null &&
+        subject.isPremium &&
+        !progressStore.isSubjectPurchased(subject.id) &&
+        subject.modules.firstOrNull?.id != module.id;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         onTap: () {
-          context.push('/lesson/${lesson.id}');
+          if (isLocked) {
+            PaywallBottomSheet.show(context, subject, module);
+          } else {
+            context.push('/lesson/${lesson.id}');
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -460,13 +475,18 @@ class _LessonRow extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.menu_book_rounded,
+                isLocked ? Icons.lock_rounded : Icons.menu_book_rounded,
                 size: 18,
-                color: colors.accentPrimary,
+                color: isLocked ? colors.accentWarning : colors.accentPrimary,
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(lesson.title, style: theme.textTheme.bodyMedium),
+                child: Text(
+                  lesson.title,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isLocked ? colors.textMuted : colors.textPrimary,
+                  ),
+                ),
               ),
               if (completed)
                 Text(
@@ -477,7 +497,9 @@ class _LessonRow extends StatelessWidget {
                 ),
               Text(
                 '${lesson.durationMinutes} min | ${describeLearningFormat(lesson.format)}',
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isLocked ? colors.textMuted : colors.textSecondary,
+                ),
               ),
             ],
           ),
@@ -498,11 +520,25 @@ class _QuizRow extends StatelessWidget {
     final colors = context.appColors;
     final attempt = context.select<ProgressController, QuizAttemptResult?>((p) => p.quizAttemptFor(quiz.id));
 
+    final repo = context.read<CatalogRepository>();
+    final progressStore = context.watch<ProgressController>();
+    final subject = repo.getSubjectForQuiz(quiz.id);
+    final module = repo.getModuleForQuiz(quiz.id);
+    final isLocked = subject != null &&
+        module != null &&
+        subject.isPremium &&
+        !progressStore.isSubjectPurchased(subject.id) &&
+        subject.modules.firstOrNull?.id != module.id;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         onTap: () {
-          context.push('/quiz/${quiz.id}');
+          if (isLocked) {
+            PaywallBottomSheet.show(context, subject, module);
+          } else {
+            context.push('/quiz/${quiz.id}');
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -510,13 +546,18 @@ class _QuizRow extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.checklist_rounded,
+                isLocked ? Icons.lock_rounded : Icons.checklist_rounded,
                 size: 18,
-                color: colors.accentWarning,
+                color: isLocked ? colors.accentWarning : colors.accentWarning,
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(quiz.title, style: theme.textTheme.bodyMedium),
+                child: Text(
+                  quiz.title,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isLocked ? colors.textMuted : colors.textPrimary,
+                  ),
+                ),
               ),
               if (attempt != null)
                 Text(
@@ -527,7 +568,9 @@ class _QuizRow extends StatelessWidget {
                 ),
               Text(
                 '${quiz.questionCount} Q | ${describeExamFormat(quiz.examFormat)}',
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isLocked ? colors.textMuted : colors.textSecondary,
+                ),
               ),
             ],
           ),

@@ -47,4 +47,27 @@ void main() {
     expect(interval.easeFactor, 2.5);
     expect(interval.nextReviewDate, baseTime.add(const Duration(days: 7)));
   });
+
+  test('SrsController updateInterval maps confidence levels correctly', () async {
+    final storage = MockStorageService();
+    final sync = MockSyncService();
+    final srs = SrsController(storage, sync);
+    await srs.init();
+
+    final baseTime = DateTime(2023, 1, 1);
+
+    withClock(Clock.fixed(baseTime), () {
+      srs.updateInterval('item_easy', 'easy');     // maps to quality 5 -> interval 1, ease 2.5
+      srs.updateInterval('item_medium', 'medium'); // maps to quality 3 -> interval 1, ease 2.5
+      srs.updateInterval('item_hard', 'hard');     // maps to quality 1 -> interval 1 (existing null resets repetitions/interval to 0 or 1 depending on SM-2 implementation)
+    });
+
+    final intervalEasy = srs.getInterval('item_easy');
+    expect(intervalEasy, isNotNull);
+    expect(intervalEasy!.intervalDays, 1);
+
+    final intervalMedium = srs.getInterval('item_medium');
+    expect(intervalMedium, isNotNull);
+    expect(intervalMedium!.intervalDays, 1);
+  });
 }

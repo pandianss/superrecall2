@@ -287,4 +287,74 @@ class ProgressController extends ChangeNotifier {
     }
     return weakTopics;
   }
+
+  double retentionScoreForExam(ExamCatalog exam) {
+    final allItems = <String>[];
+    int totalItems = 0;
+    double strengthSum = 0;
+    int strengthCount = 0;
+
+    for (final subject in exam.subjects) {
+      for (final module in subject.modules) {
+        for (final topic in module.topics) {
+          for (final lesson in topic.lessons) {
+            totalItems++;
+            final interval = _srsController.getInterval(lesson.id);
+            if (interval != null) {
+              strengthSum += interval.recallStrength;
+              strengthCount++;
+            }
+          }
+          for (final quiz in topic.quizzes) {
+            totalItems++;
+            final interval = _srsController.getInterval(quiz.id);
+            if (interval != null) {
+              strengthSum += interval.recallStrength;
+              strengthCount++;
+            }
+          }
+        }
+      }
+    }
+
+    final avgStrength = strengthCount > 0 ? strengthSum / strengthCount : 0.25;
+    final coverage = totalItems > 0 ? completedCoverageForExam(exam) / totalItems : 0.0;
+    final mastery = averageMasteryForExam(exam) / 100.0;
+
+    final score = ((avgStrength * 0.5) + (mastery * 0.35) + (coverage * 0.15)) * 100;
+    return score.clamp(0, 100);
+  }
+
+  double completedCoverageForExam(ExamCatalog exam) {
+    var count = 0;
+    for (final subject in exam.subjects) {
+      for (final module in subject.modules) {
+        for (final topic in module.topics) {
+          for (final lesson in topic.lessons) {
+            if (_completedLessonIds.contains(lesson.id)) count++;
+          }
+          for (final quiz in topic.quizzes) {
+            if (_quizAttemptsById.containsKey(quiz.id)) count++;
+          }
+        }
+      }
+    }
+    return count.toDouble();
+  }
+
+  int averageMasteryForExam(ExamCatalog exam) {
+    var total = 0;
+    var count = 0;
+    for (final subject in exam.subjects) {
+      for (final module in subject.modules) {
+        for (final topic in module.topics) {
+          total += progressForTopic(topic).masteryPercent;
+          count++;
+        }
+      }
+    }
+    return count == 0 ? 0 : (total / count).round();
+  }
+
+  int weakTopicCountForExam(ExamCatalog exam) => getWeakTopics(exam).length;
 }

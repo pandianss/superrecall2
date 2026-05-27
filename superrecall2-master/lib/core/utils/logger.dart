@@ -12,24 +12,18 @@ class AppLogger {
     dev.log(message, name: 'INFO', error: error, stackTrace: stackTrace, level: 800);
     
     // Log info as a custom event in Analytics
-    _analytics.logEvent(
-      name: 'app_info',
-      parameters: {
-        'message': message.length > 100 ? message.substring(0, 100) : message,
-      },
-    );
+    logEvent('app_info', {
+      'message': message.length > 100 ? message.substring(0, 100) : message,
+    });
   }
 
   static void warning(String message, [Object? error, StackTrace? stackTrace]) {
     dev.log(message, name: 'WARNING', error: error, stackTrace: stackTrace, level: 900);
     
     // Log warnings to Analytics
-    _analytics.logEvent(
-      name: 'app_warning',
-      parameters: {
-        'message': message.length > 100 ? message.substring(0, 100) : message,
-      },
-    );
+    logEvent('app_warning', {
+      'message': message.length > 100 ? message.substring(0, 100) : message,
+    });
   }
 
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
@@ -45,11 +39,28 @@ class AppLogger {
     }
     
     // Also log to Analytics
-    _analytics.logEvent(
-      name: 'app_error',
-      parameters: {
-        'message': message.length > 100 ? message.substring(0, 100) : message,
-      },
-    );
+    logEvent('app_error', {
+      'message': message.length > 100 ? message.substring(0, 100) : message,
+    });
+  }
+
+  static Future<void> logEvent(String name, [Map<String, Object?>? parameters]) async {
+    try {
+      final Map<String, Object>? sanitized = parameters == null
+          ? null
+          : Map<String, Object>.fromEntries(
+              parameters.entries.where((e) => e.value != null).map((e) => MapEntry(e.key, e.value as Object)),
+            );
+      await _analytics.logEvent(name: name, parameters: sanitized);
+    } catch (_) {
+      // Ignore analytics failure silently.
+    }
+  }
+
+  static Future<void> logScreenView(String screenName, [Map<String, Object?>? parameters]) async {
+    await logEvent('screen_view', {
+      'screen_name': screenName,
+      ...?parameters,
+    });
   }
 }

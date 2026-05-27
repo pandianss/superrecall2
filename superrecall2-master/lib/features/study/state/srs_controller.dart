@@ -73,6 +73,23 @@ class SrsController extends ChangeNotifier {
         newInterval = 1;
         newEase = 2.5;
         newRepetitions = 1;
+        // Fresh item, set recall strength proportional to quality
+        final recallStrength = (quality / 5.0).clamp(0.0, 1.0);
+        final failures = quality < 3 ? 1 : 0;
+        _reviewIntervals[itemId] = ReviewInterval(
+          itemId: itemId,
+          nextReviewDate: now.add(Duration(days: newInterval)),
+          lastReviewedDate: now,
+          intervalDays: newInterval,
+          easeFactor: newEase,
+          repetitions: newRepetitions,
+          recallStrength: recallStrength,
+          consecutiveFailures: failures,
+        );
+        _storage.saveSrsIntervals(_reviewIntervals.map((key, value) => MapEntry(key, value.toJson())));
+        _syncService.pushLocalProgress();
+        notifyListeners();
+        return;
       } else {
         newInterval = 0; // Immediate re-review
         newEase = 2.5;
@@ -97,6 +114,11 @@ class SrsController extends ChangeNotifier {
     }
 
     newInterval = newInterval.clamp(0, 3650);
+    // Update recall strength using a simple EWMA: newer quality weighs more
+    final prevStrength = existing?.recallStrength ?? 0.5;
+    final normalized = (quality / 5.0).clamp(0.0, 1.0);
+    final newStrength = (prevStrength * 0.7) + (normalized * 0.3);
+    final newFailures = (quality < 3) ? ((existing?.consecutiveFailures ?? 0) + 1) : 0;
 
     _reviewIntervals[itemId] = ReviewInterval(
       itemId: itemId,
@@ -105,12 +127,29 @@ class SrsController extends ChangeNotifier {
       intervalDays: newInterval,
       easeFactor: newEase,
       repetitions: newRepetitions,
+      recallStrength: newStrength,
+      consecutiveFailures: newFailures,
     );
     
-    _storage.saveSrsIntervals(_reviewIntervals.map(
-      (key, value) => MapEntry(key, value.toJson()),
-    ));
+    _storage.saveSrsIntervals(_reviewIntervals.map((key, value) => MapEntry(key, value.toJson())));
     _syncService.pushLocalProgress();
     notifyListeners();
+  }
+
+  void updateInterval(String itemId, String confidence) {
+    int quality;
+    switch (confidence.toLowerCase()) {
+      case 'easy':
+        quality = 5;
+        break;
+      case 'medium':
+        quality = 3;
+        break;
+      case 'hard':
+      default:
+        quality = 1;
+        break;
+    }
+    scheduleReview(itemId, quality);
   }
 }

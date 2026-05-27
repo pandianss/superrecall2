@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:clock/clock.dart';
 import 'package:superrecall/features/study/state/learning_session_controller.dart';
 import 'package:superrecall/features/study/state/srs_controller.dart';
+import 'package:superrecall/data/local/storage_service.dart';
+import 'package:superrecall/data/repositories/catalog_repository.dart';
 import 'package:superrecall/features/study/state/progress_controller.dart';
 import 'package:superrecall/features/engagement/state/engagement_controller.dart';
 import 'package:superrecall/features/study/domain/learning_models.dart';
@@ -76,5 +78,85 @@ void main() {
         });
       });
     });
+
+    test('Checkpoint payload stores queue state and can be restored', () async {
+      final storage = _RecordingStorageService();
+      final sync = MockSyncService();
+      final srs = SrsController(storage, sync);
+      final eng = EngagementController(storage, sync);
+      final progress = ProgressController(storage, srs, eng, sync);
+      final session = LearningSessionController(srs, progress);
+
+      final lesson = const LessonUnit(
+        id: 'l1',
+        title: 'Saved Lesson',
+        durationMinutes: 3,
+        format: LearningFormat.note,
+        blocks: [],
+      );
+      final quiz = const QuizSet(
+        id: 'q1',
+        title: 'Saved Quiz',
+        questionCount: 1,
+        mode: 'practice',
+        examFormat: ExamFormatType.mcq,
+        questions: [],
+      );
+      final queue = [
+        DailyQueueItem(
+          id: lesson.id,
+          type: DailyItemType.lesson,
+          isWeakArea: false,
+          sequenceIndex: 1,
+          lesson: lesson,
+        ),
+        DailyQueueItem(
+          id: quiz.id,
+          type: DailyItemType.quiz,
+          isWeakArea: true,
+          sequenceIndex: 2,
+          quiz: quiz,
+        ),
+      ];
+
+      await session.saveCheckpoint(storage, 'exam1', queue, 1, 0);
+      expect(storage.savedPayload, isNotNull);
+      final payload = storage.savedPayload!;
+
+      expect(payload['examId'], 'exam1');
+      expect(payload['currentIndex'], 1);
+      expect(payload['subIndex'], 0);
+      expect(payload['queueJson'], isA<String>());
+
+      final restoredRepo = _TestCatalogRepository(lessons: {lesson.id: lesson}, quizzes: {quiz.id: quiz});
+      final restoredQueue = session.restoreQueueFromCheckpoint(payload, restoredRepo);
+
+      expect(restoredQueue, hasLength(2));
+      expect(restoredQueue[0].lesson?.id, lesson.id);
+      expect(restoredQueue[1].quiz?.id, quiz.id);
+      expect(restoredQueue[1].isWeakArea, isTrue);
+    });
   });
+}
+
+class _RecordingStorageService extends StorageService {
+  Map<String, dynamic>? savedPayload;
+
+  @override
+  Future<void> saveSessionCheckpoint(Map<String, dynamic> data) async {
+    savedPayload = data;
+  }
+}
+
+class _TestCatalogRepository extends CatalogRepository {
+  final Map<String, LessonUnit> lessons;
+  final Map<String, QuizSet> quizzes;
+
+  _TestCatalogRepository({required this.lessons, required this.quizzes});
+
+  @override
+  LessonUnit? getLesson(String lessonId) => lessons[lessonId];
+
+  @override
+  QuizSet? getQuiz(String quizId) => quizzes[quizId];
 }

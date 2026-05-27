@@ -991,6 +991,33 @@
       "isPremium": false,
       "price": 0,
       "modules": []
+    },
+    {
+      "id": "rural_banking",
+      "name": "Rural Banking",
+      "description": "Comprehensive guide to rural credit systems, agricultural finance, and priority sector lending.",
+      "examFormats": ["mcq"],
+      "isPremium": true,
+      "price": 9.99,
+      "modules": []
+    },
+    {
+      "id": "hrm",
+      "name": "Human Resources Management",
+      "description": "Core concepts in HR development, performance systems, and organizational behavior in banks.",
+      "examFormats": ["mcq"],
+      "isPremium": true,
+      "price": 9.99,
+      "modules": []
+    },
+    {
+      "id": "it_digital",
+      "name": "IT & Digital Banking",
+      "description": "Infrastructure, cybersecurity, digital channels, and payment systems compliance.",
+      "examFormats": ["mcq"],
+      "isPremium": true,
+      "price": 12.99,
+      "modules": []
     }
   ],
   "schemaVersion": 1

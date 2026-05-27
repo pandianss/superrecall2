@@ -15,11 +15,13 @@ import '../../engagement/state/notification_service.dart';
 import '../../engagement/presentation/xp_toast.dart';
 import '../../ai/presentation/ai_explanation_area.dart';
 import 'dart:async';
+import '../../../data/local/storage_service.dart';
 
 class DailySessionScreen extends StatefulWidget {
-  const DailySessionScreen({super.key, required this.examId});
+  const DailySessionScreen({super.key, required this.examId, this.initialQueue});
 
   final String examId;
+  final List<DailyQueueItem>? initialQueue;
 
   @override
   State<DailySessionScreen> createState() => _DailySessionScreenState();
@@ -28,6 +30,7 @@ class DailySessionScreen extends StatefulWidget {
 class _DailySessionScreenState extends State<DailySessionScreen> {
   late List<DailyQueueItem> _queue;
   int _currentIndex = 0;
+  int _currentSubIndex = 0;
   bool _sessionComplete = false;
   final List<int> _activeToasts = [];
   StreamSubscription? _xpSubscription;
@@ -49,10 +52,41 @@ class _DailySessionScreenState extends State<DailySessionScreen> {
       return;
     }
     final sessionController = context.read<LearningSessionController>();
-    _queue = sessionController.getDailyQueue(exam);
+    _queue = widget.initialQueue ?? sessionController.getDailyQueue(exam);
     if (_queue.isEmpty) {
       _sessionComplete = true;
     }
+
+    // Attempt to restore a saved checkpoint (queue + current index) if present via controller
+    final storage = context.read<StorageService>();
+    final checkpointRepo = context.read<CatalogRepository>();
+
+    Future.microtask(() async {
+      try {
+        final chk = await storage.getSessionCheckpoint();
+        if (chk != null && chk['examId'] == widget.examId) {
+          final restored = sessionController.restoreQueueFromCheckpoint(chk, checkpointRepo);
+          if (restored.isNotEmpty) {
+            setState(() {
+              _queue = restored;
+              final idx = (chk['currentIndex'] as int?) ?? 0;
+              _currentIndex = (idx >= 0 && idx < _queue.length) ? idx : 0;
+              _currentSubIndex = (chk['subIndex'] as int?) ?? 0;
+            });
+          } else {
+            final idx = (chk['currentIndex'] as int?) ?? 0;
+            if (idx >= 0 && idx < _queue.length) {
+              setState(() {
+                _currentIndex = idx;
+                _currentSubIndex = (chk['subIndex'] as int?) ?? 0;
+              });
+            }
+          }
+        }
+      } catch (e) {
+        // ignore restore errors silently
+      }
+    });
 
     final engagement = context.read<EngagementController>();
     _xpSubscription = engagement.xpEarnedStream.listen((xp) {
@@ -75,11 +109,38 @@ class _DailySessionScreenState extends State<DailySessionScreen> {
       setState(() {
         _currentIndex++;
       });
+      _persistSessionCheckpoint();
     } else {
       setState(() {
         _sessionComplete = true;
       });
+      _clearSessionCheckpoint();
     }
+  }
+
+  Future<void> _persistSessionCheckpoint() async {
+    try {
+      final storage = context.read<StorageService>();
+      final sessionController = context.read<LearningSessionController>();
+      await sessionController.saveCheckpoint(storage, widget.examId, _queue, _currentIndex, _currentSubIndex);
+    } catch (_) {
+      // ignore save errors
+    }
+  }
+
+  Future<void> _clearSessionCheckpoint() async {
+    try {
+      final storage = context.read<StorageService>();
+      final sessionController = context.read<LearningSessionController>();
+      await sessionController.clearCheckpoint(storage);
+    } catch (_) {
+      // ignore save errors
+    }
+  }
+
+  void _updateSubIndex(int subIndex) {
+    _currentSubIndex = subIndex;
+    _persistSessionCheckpoint();
   }
 
   @override
@@ -96,22 +157,35 @@ class _DailySessionScreenState extends State<DailySessionScreen> {
 
     return Stack(
       children: [
-        Scaffold(
-          backgroundColor: context.appColors.surfaceBase,
+        Semantics(
+          container: true,
+          label: 'Daily session. ${currentItem.type == DailyItemType.lesson ? 'Lesson' : 'Quiz'} ${_currentIndex + 1} of ${_queue.length}. ${currentItem.reason}.',
+          hint: 'Complete the current item, then continue to the next session item.',
+          child: Scaffold(
+            backgroundColor: context.appColors.surfaceBase,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
+            leading: Semantics(
+              button: true,
+              label: 'Close session',
+              hint: 'Leave the session and return to the study dashboard.',
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
-            title: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 6,
-                backgroundColor: context.appColors.surfaceElevated,
-                valueColor: AlwaysStoppedAnimation<Color>(context.appColors.accentSuccess),
+            title: Semantics(
+              label: 'Session progress',
+              value: '${_currentIndex + 1} of ${_queue.length}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 6,
+                  backgroundColor: context.appColors.surfaceElevated,
+                  valueColor: AlwaysStoppedAnimation<Color>(context.appColors.accentSuccess),
+                ),
               ),
             ),
             actions: [
@@ -127,17 +201,22 @@ class _DailySessionScreenState extends State<DailySessionScreen> {
             ],
           ),
           body: currentItem.type == DailyItemType.lesson
-                ? _LessonSessionView(
-                    lesson: currentItem.lesson!,
-                    reason: currentItem.reason,
-                    onComplete: _nextItem,
-                  )
+                    ? _MicroLessonView(
+                        lesson: currentItem.lesson!,
+                        reason: currentItem.reason,
+                        onComplete: _nextItem,
+                        initialBlockIndex: _currentSubIndex,
+                        onBlockChanged: _updateSubIndex,
+                      )
                 : _QuizSessionView(
-                    quiz: currentItem.quiz!,
-                    reason: currentItem.reason,
-                    onComplete: _nextItem,
-                  ),
+                        quiz: currentItem.quiz!,
+                        reason: currentItem.reason,
+                        onComplete: _nextItem,
+                        initialQuestionIndex: _currentSubIndex,
+                        onQuestionChanged: _updateSubIndex,
+                      ),
         ),
+      ),
         for (final xp in _activeToasts)
           XpToast(
             xp: xp,
@@ -154,22 +233,73 @@ class _DailySessionScreenState extends State<DailySessionScreen> {
   }
 }
 
-class _LessonSessionView extends StatelessWidget {
-  const _LessonSessionView({
-    required this.lesson,
-    required this.reason,
-    required this.onComplete,
-  });
+class _MicroLessonView extends StatefulWidget {
+  const _MicroLessonView({required this.lesson, required this.reason, required this.onComplete, this.initialBlockIndex = 0, required this.onBlockChanged});
 
   final LessonUnit lesson;
   final String reason;
   final VoidCallback onComplete;
+  final int initialBlockIndex;
+  final Function(int) onBlockChanged;
+
+  @override
+  State<_MicroLessonView> createState() => _MicroLessonViewState();
+}
+
+class _MicroLessonViewState extends State<_MicroLessonView> {
+  late int _blockIndex;
+  bool _revealed = false;
+  int _correctCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _blockIndex = widget.initialBlockIndex;
+  }
+
+  void _reveal() {
+    setState(() {
+      _revealed = true;
+    });
+  }
+
+  void _recordRecall(bool recalled) {
+    if (recalled) {
+      _correctCount++;
+    }
+    // move to next block or finish
+    if (_blockIndex < widget.lesson.blocks.length - 1) {
+      setState(() {
+        _blockIndex++;
+        _revealed = false;
+      });
+      widget.onBlockChanged(_blockIndex);
+      return;
+    }
+    // Finish lesson: derive quality from recall rate
+    final ratio = widget.lesson.blocks.isEmpty ? 1.0 : (_correctCount / widget.lesson.blocks.length);
+    int quality;
+    if (ratio >= 0.85) {
+      quality = 5;
+    } else if (ratio >= 0.65) {
+      quality = 4;
+    } else if (ratio >= 0.4) {
+      quality = 2;
+    } else {
+      quality = 1;
+    }
+    final store = context.read<ProgressController>();
+    store.markLessonCompleted(widget.lesson.id, quality: quality);
+    widget.onComplete();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final store = context.read<ProgressController>();
+    final block = widget.lesson.blocks[_blockIndex];
+    final colors = context.appColors;
+    final textTheme = context.textTheme;
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(20),
       child: Center(
         child: ConstrainedBox(
@@ -182,66 +312,56 @@ class _LessonSessionView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      reason.toUpperCase(), 
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.appColors.accentWarning,
-                      ),
-                    ),
+                    Text(widget.reason.toUpperCase(), style: textTheme.labelSmall?.copyWith(color: colors.accentWarning)),
                     const SizedBox(height: 8),
-                    Text(lesson.title, style: context.textTheme.headlineSmall),
+                    Text(widget.lesson.title, style: textTheme.headlineSmall),
                     const SizedBox(height: 8),
-                    Text(
-                      '${lesson.durationMinutes} min · ${describeLearningFormat(lesson.format)}',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.appColors.textSecondary,
-                      ),
-                    ),
+                    Text('${widget.lesson.durationMinutes} min · ${describeLearningFormat(widget.lesson.format)}', style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary)),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              for (final block in lesson.blocks)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _SessionBlockCard(block: block),
+              StudyCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (!_revealed) ...[
+                      Text('Recall this concept', style: textTheme.titleMedium),
+                      const SizedBox(height: 12),
+                      Text('Tap to reveal the content and self-test your recall.', style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary)),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: _reveal,
+                          child: const Text('Reveal'),
+                        ),
+                      ),
+                    ] else ...[
+                      _SessionBlockCard(block: block),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => _recordRecall(false),
+                              style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
+                              child: const Text('Didn\'t recall'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: () => _recordRecall(true),
+                              style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
+                              child: const Text('Recalled'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        store.markLessonCompleted(lesson.id, quality: 2);
-                        onComplete();
-                      },
-                      style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
-                      child: const Text('Hard'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: () {
-                        store.markLessonCompleted(lesson.id, quality: 4);
-                        onComplete();
-                      },
-                      style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
-                      child: const Text('Good'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FilledButton.tonal(
-                      onPressed: () {
-                        store.markLessonCompleted(lesson.id, quality: 5);
-                        onComplete();
-                      },
-                      style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
-                      child: const Text('Easy'),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -256,11 +376,15 @@ class _QuizSessionView extends StatefulWidget {
     required this.quiz,
     required this.reason,
     required this.onComplete,
+    this.initialQuestionIndex = 0,
+    required this.onQuestionChanged,
   });
 
   final QuizSet quiz;
   final String reason;
   final VoidCallback onComplete;
+  final int initialQuestionIndex;
+  final Function(int) onQuestionChanged;
 
   @override
   State<_QuizSessionView> createState() => _QuizSessionViewState();
@@ -270,6 +394,12 @@ class _QuizSessionViewState extends State<_QuizSessionView> {
   final Map<String, String> _selectedOptions = {};
   int _activeQuestionIndex = 0;
   bool _showExplanation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _activeQuestionIndex = widget.initialQuestionIndex;
+  }
 
   int get _correctCount {
     var score = 0;
@@ -295,6 +425,7 @@ class _QuizSessionViewState extends State<_QuizSessionView> {
         _activeQuestionIndex++;
         _showExplanation = false;
       });
+      widget.onQuestionChanged(_activeQuestionIndex);
     } else {
       setState(() {
         _activeQuestionIndex++; 

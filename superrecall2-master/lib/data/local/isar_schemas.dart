@@ -13,6 +13,8 @@ class SrsIntervalSchema {
   late double easeFactor;
   late DateTime nextReview;
   late int repetitions;
+  late double recallStrength;
+  late int consecutiveFailures;
 }
 
 @collection
@@ -74,4 +76,15 @@ class PurchasedSubjectSchema {
   late String subjectId;
 
   late DateTime purchasedAt;
+}
+
+@collection
+class SessionCheckpointSchema {
+  Id id = 0; // Singleton checkpoint per device/user
+
+  late String examId;
+  late int currentIndex;
+  DateTime? savedAt;
+  String? queueJson;
+  int? subIndex;
 }

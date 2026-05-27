@@ -3,6 +3,9 @@ import 'package:clock/clock.dart';
 import '../domain/learning_models.dart';
 import 'srs_controller.dart';
 import 'progress_controller.dart';
+import 'dart:convert';
+import '../../../data/local/storage_service.dart';
+import '../../../data/repositories/catalog_repository.dart';
 
 enum DailyItemType { lesson, quiz }
 
@@ -145,7 +148,14 @@ class LearningSessionController extends ChangeNotifier {
     dueReviews.sort((a, b) {
       if (a.isWeakArea && !b.isWeakArea) return -1;
       if (!a.isWeakArea && b.isWeakArea) return 1;
-      
+
+      // Prefer items with lower recall strength (weaker memory) first
+      final aInterval = _srsController.getInterval(a.id);
+      final bInterval = _srsController.getInterval(b.id);
+      final aStrength = aInterval?.recallStrength ?? 0.5;
+      final bStrength = bInterval?.recallStrength ?? 0.5;
+      if (aStrength != bStrength) return aStrength.compareTo(bStrength);
+
       final aOverdue = a.overdueAmount ?? Duration.zero;
       final bOverdue = b.overdueAmount ?? Duration.zero;
       return bOverdue.compareTo(aOverdue); // larger overdue amount first
@@ -155,6 +165,8 @@ class LearningSessionController extends ChangeNotifier {
     newItems.sort((a, b) {
       if (a.isWeakArea && !b.isWeakArea) return -1;
       if (!a.isWeakArea && b.isWeakArea) return 1;
+
+      // For new items, prefer lower sequenceIndex (curriculum order)
       return a.sequenceIndex.compareTo(b.sequenceIndex);
     });
 
@@ -203,5 +215,77 @@ class LearningSessionController extends ChangeNotifier {
       }
     }
     return count;
+  }
+
+  // --- Checkpoint helpers ---
+  Map<String, dynamic> makeCheckpointPayload(String examId, List<DailyQueueItem> queue, int currentIndex, int? subIndex) {
+    final queueMinimal = queue.map((e) => {
+      'id': e.id,
+      'type': e.type == DailyItemType.lesson ? 'lesson' : 'quiz',
+      'isWeakArea': e.isWeakArea,
+      'sequenceIndex': e.sequenceIndex,
+    }).toList();
+
+    return {
+      'examId': examId,
+      'currentIndex': currentIndex,
+      'subIndex': subIndex,
+      'savedAt': DateTime.now().toIso8601String(),
+      'queueJson': json.encode(queueMinimal),
+    };
+  }
+
+  Future<void> saveCheckpoint(StorageService storage, String examId, List<DailyQueueItem> queue, int currentIndex, int? subIndex) async {
+    if (storage == null) return;
+    final payload = makeCheckpointPayload(examId, queue, currentIndex, subIndex);
+    await storage.saveSessionCheckpoint(payload);
+  }
+
+  Future<void> clearCheckpoint(StorageService storage) async {
+    if (storage == null) return;
+    await storage.clearSessionCheckpoint();
+  }
+
+  List<DailyQueueItem> restoreQueueFromCheckpoint(Map<String, dynamic> chk, CatalogRepository repo) {
+    final qJson = chk['queueJson'] as String?;
+    if (qJson == null || qJson.isEmpty) return [];
+    try {
+      final parsed = json.decode(qJson) as List<dynamic>;
+      final restored = <DailyQueueItem>[];
+      for (final item in parsed) {
+        final map = item as Map<String, dynamic>;
+        final id = map['id'] as String;
+        final type = map['type'] as String;
+        final isWeak = map['isWeakArea'] as bool? ?? false;
+        final seq = map['sequenceIndex'] as int? ?? 0;
+
+        if (type == 'lesson') {
+          final lesson = repo.getLesson(id);
+          if (lesson != null) {
+            restored.add(DailyQueueItem(
+              id: id,
+              type: DailyItemType.lesson,
+              isWeakArea: isWeak,
+              sequenceIndex: seq,
+              lesson: lesson,
+            ));
+          }
+        } else {
+          final quiz = repo.getQuiz(id);
+          if (quiz != null) {
+            restored.add(DailyQueueItem(
+              id: id,
+              type: DailyItemType.quiz,
+              isWeakArea: isWeak,
+              sequenceIndex: seq,
+              quiz: quiz,
+            ));
+          }
+        }
+      }
+      return restored;
+    } catch (e) {
+      return [];
+    }
   }
 }

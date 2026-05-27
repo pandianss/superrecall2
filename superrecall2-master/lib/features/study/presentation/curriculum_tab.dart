@@ -5,6 +5,7 @@ import '../domain/learning_models.dart';
 import '../state/progress_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/study_card.dart';
+import 'widgets/paywall_bottom_sheet.dart';
 
 class CurriculumTab extends StatelessWidget {
   const CurriculumTab({
@@ -51,15 +52,31 @@ class CurriculumTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 32),
-          ...selectedExam.subjects.map((subject) {
+          Text('Core Subjects', style: textTheme.titleMedium),
+          const SizedBox(height: 12),
+          ...selectedExam.subjects.where((s) => s.id == 'abm' || s.id == 'bfm' || s.id == 'abfm' || s.id == 'brbl').map((subject) {
             final isPurchased = !subject.isPremium || progressStore.isSubjectPurchased(subject.id);
             return _SubjectCard(
               subject: subject,
               isPurchased: isPurchased,
               onPurchase: () => _showPurchaseDialog(context, subject, progressStore),
-              onTap: isPurchased ? () {
+              onTap: () {
                 context.push('/study-plan/${selectedExam.id}');
-              } : null,
+              },
+            );
+          }),
+          const SizedBox(height: 24),
+          Text('Elective Subjects', style: textTheme.titleMedium),
+          const SizedBox(height: 12),
+          ...selectedExam.subjects.where((s) => s.id != 'abm' && s.id != 'bfm' && s.id != 'abfm' && s.id != 'brbl').map((subject) {
+            final isPurchased = !subject.isPremium || progressStore.isSubjectPurchased(subject.id);
+            return _SubjectCard(
+              subject: subject,
+              isPurchased: isPurchased,
+              onPurchase: () => _showPurchaseDialog(context, subject, progressStore),
+              onTap: () {
+                context.push('/study-plan/${selectedExam.id}');
+              },
             );
           }),
         ],
@@ -68,42 +85,14 @@ class CurriculumTab extends StatelessWidget {
   }
 
   void _showPurchaseDialog(BuildContext context, SubjectCatalog subject, ProgressController progress) {
-    final colors = context.appColors;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: colors.surfaceCard,
-        title: Text('Unlock ${subject.name}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(subject.description),
-            const SizedBox(height: 16),
-            Text(
-              'Get lifetime access to all modules, quizzes, and AI insights for this subject.',
-              style: TextStyle(color: colors.textSecondary, fontSize: 13),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Later', style: TextStyle(color: colors.textSecondary)),
-          ),
-          FilledButton(
-            onPressed: () {
-              progress.purchaseSubject(subject.id);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Successfully unlocked ${subject.name}!'))
-              );
-            },
-            style: FilledButton.styleFrom(backgroundColor: colors.accentPrimary),
-            child: Text('Buy for \$${subject.price.toStringAsFixed(2)}'),
-          ),
-        ],
-      ),
-    );
+    if (subject.modules.isNotEmpty) {
+      final targetModule = subject.modules.length > 1 ? subject.modules[1] : subject.modules.first;
+      PaywallBottomSheet.show(context, subject, targetModule);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${subject.name} does not have any modules.'))
+      );
+    }
   }
 }
 
@@ -159,7 +148,7 @@ class _SubjectCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: StudyCard(
-        onTap: isPurchased ? onTap : onPurchase,
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

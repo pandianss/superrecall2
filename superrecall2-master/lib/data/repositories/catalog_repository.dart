@@ -9,6 +9,8 @@ class CatalogRepository {
   final Map<String, LessonUnit> _lessonMap = {};
   final Map<String, QuizSet> _quizMap = {};
 
+  List<ExamCatalog> get exams => _cache;
+
   Future<List<ExamCatalog>> fetchCatalogs() async {
     if (_cache.isNotEmpty) return _cache;
     
@@ -98,4 +100,140 @@ class CatalogRepository {
   LessonUnit? getLesson(String lessonId) => _lessonMap[lessonId];
 
   QuizSet? getQuiz(String quizId) => _quizMap[quizId];
+
+  SubjectCatalog? getSubjectForLesson(String lessonId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final lesson in topic.lessons) {
+              if (lesson.id == lessonId) {
+                return subject;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  ModuleCatalog? getModuleForLesson(String lessonId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final lesson in topic.lessons) {
+              if (lesson.id == lessonId) {
+                return module;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  ExamCatalog? getExamForLesson(String lessonId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final lesson in topic.lessons) {
+              if (lesson.id == lessonId) {
+                return exam;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  SubjectCatalog? getSubjectForQuiz(String quizId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final quiz in topic.quizzes) {
+              if (quiz.id == quizId) {
+                return subject;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  ModuleCatalog? getModuleForQuiz(String quizId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final quiz in topic.quizzes) {
+              if (quiz.id == quizId) {
+                return module;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  ExamCatalog? getExamForQuiz(String quizId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final quiz in topic.quizzes) {
+              if (quiz.id == quizId) {
+                return exam;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  TopicCatalog? getTopicForLesson(String lessonId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final lesson in topic.lessons) {
+              if (lesson.id == lessonId) {
+                return topic;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  TopicCatalog? getTopicForQuiz(String quizId) {
+    for (final exam in _cache) {
+      for (final subject in exam.subjects) {
+        for (final module in subject.modules) {
+          for (final topic in module.topics) {
+            for (final quiz in topic.quizzes) {
+              if (quiz.id == quizId) {
+                return topic;
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
 }

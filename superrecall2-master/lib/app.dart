@@ -11,6 +11,7 @@ import 'features/study/presentation/daily_session_screen.dart';
 import 'features/study/presentation/lesson_detail_screen.dart';
 import 'features/study/presentation/splash_screen.dart';
 import 'features/quiz/presentation/quiz_detail_screen.dart';
+import 'features/study/presentation/drill_session_screen.dart';
 import 'features/engagement/presentation/settings_screen.dart';
 import 'features/engagement/presentation/profile_screen.dart';
 import 'features/engagement/presentation/auth_screen.dart';
@@ -47,6 +48,10 @@ final _router = GoRouter(
       builder: (context, state) => DailySessionScreen(
         examId: state.pathParameters['examId']!,
       ),
+    ),
+    GoRoute(
+      path: '/drill/:examId',
+      builder: (context, state) => DrillSessionScreen(examId: state.pathParameters['examId']!),
     ),
     GoRoute(
       path: '/lesson/:lessonId',
